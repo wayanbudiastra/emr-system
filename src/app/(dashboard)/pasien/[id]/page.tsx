@@ -58,7 +58,7 @@ export default function PasienDetailPage({ params }: { params: Promise<{ id: str
     return (
       <div className="text-center py-20 text-muted-foreground">
         <p>Pasien tidak ditemukan.</p>
-        <Button variant="link" className="mt-2" render={<Link href="/pasien" />}>Kembali ke daftar</Button>
+        <Button variant="link" className="mt-2" nativeButton={false} render={<Link href="/pasien" />}>Kembali ke daftar</Button>
       </div>
     );
   }
@@ -70,7 +70,7 @@ export default function PasienDetailPage({ params }: { params: Promise<{ id: str
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="shrink-0" render={<Link href="/pasien" />}>
+          <Button variant="ghost" size="icon" className="shrink-0" nativeButton={false} render={<Link href="/pasien" />}>
             <ChevronLeft className="h-5 w-5" />
           </Button>
           <div>
@@ -103,7 +103,7 @@ export default function PasienDetailPage({ params }: { params: Promise<{ id: str
               : <><UserCheck className="h-4 w-4 mr-1.5" />Aktifkan</>
             }
           </Button>
-          <Button size="sm" render={<Link href={`/pasien/${p.id}/edit`} />}>
+          <Button size="sm" nativeButton={false} render={<Link href={`/pasien/${p.id}/edit`} />}>
             <Pencil className="h-4 w-4 mr-1.5" />Edit
           </Button>
         </div>
