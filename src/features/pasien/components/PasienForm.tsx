@@ -162,7 +162,7 @@ export function PasienForm({ mode = 'create', pasienId, defaultValues }: PasienF
               <FormItem>
                 <FormLabel>Jenis Kelamin <span className="text-destructive">*</span></FormLabel>
                 <FormControl>
-                  <RadioGroup value={field.value} onValueChange={field.onChange}
+                  <RadioGroup value={field.value ?? ''} onValueChange={field.onChange}
                     className="flex gap-4 pt-1">
                     {[{ v: 'LAKI_LAKI', l: 'Laki-laki' }, { v: 'PEREMPUAN', l: 'Perempuan' }].map(o => (
                       <div key={o.v} className="flex items-center gap-2">
