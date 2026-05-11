@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2, Stethoscope, FlaskConical, Cpu } from "lucide-react";
+import { Building2, Stethoscope, FlaskConical, RadioTower, Cpu } from "lucide-react";
 
 const tabs = [
-  { label: "Poliklinik",  href: "/pengaturan/masterdata/poli",      icon: Building2 },
-  { label: "Tindakan",    href: "/pengaturan/masterdata/tindakan",   icon: Stethoscope },
-  { label: "Lab & Rad",   href: "/pengaturan/masterdata/penunjang",  icon: FlaskConical },
-  { label: "Peralatan",   href: "/pengaturan/masterdata/peralatan",  icon: Cpu },
+  { label: "Poliklinik",   href: "/pengaturan/masterdata/poli",          icon: Building2 },
+  { label: "Tindakan",     href: "/pengaturan/masterdata/tindakan",       icon: Stethoscope },
+  { label: "Laboratorium", href: "/pengaturan/masterdata/laboratorium",   icon: FlaskConical },
+  { label: "Radiologi",    href: "/pengaturan/masterdata/radiologi",      icon: RadioTower },
+  { label: "Peralatan",    href: "/pengaturan/masterdata/peralatan",      icon: Cpu },
 ];
 
 export default function MasterdataLayout({ children }: { children: React.ReactNode }) {
