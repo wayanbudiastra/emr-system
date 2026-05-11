@@ -60,6 +60,7 @@ export function PasienForm({ mode = 'create', pasienId, defaultValues }: PasienF
     resolver: zodResolver(schema as any),
     defaultValues: {
       tipePasien: 'WNI',
+      jenisKelamin: '' as 'LAKI_LAKI' | 'PEREMPUAN',
       kontakDarurat: [],
       ...defaultValues,
     },
