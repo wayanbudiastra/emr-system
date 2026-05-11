@@ -1,35 +1,44 @@
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
-import { getPasienList, createPasien } from "@/services/patient.service";
-import type { ApiResponse } from "@/types";
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { pasienService } from '@/services/pasien.service';
+import { createPasienSchema } from '@/features/pasien/schemas/pasien.schema';
+
+const CAN_READ   = ['SUPER_ADMIN','ADMISSION','DOKTER','PERAWAT','KASIR'];
+const CAN_CREATE = ['SUPER_ADMIN','ADMISSION','PERAWAT'];
 
 export async function GET(req: NextRequest) {
   const session = await auth();
-  if (!session) return NextResponse.json({ success: false, error: "Unauthorized" } satisfies ApiResponse<never>, { status: 401 });
+  if (!session?.user)                        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!CAN_READ.includes(session.user.role)) return NextResponse.json({ error: 'Forbidden' },    { status: 403 });
 
-  const { searchParams } = req.nextUrl;
-  const result = await getPasienList({
-    page:   Number(searchParams.get("page")  ?? 1),
-    limit:  Number(searchParams.get("limit") ?? 20),
-    search: searchParams.get("search") ?? undefined,
+  const sp = new URL(req.url).searchParams;
+  const result = await pasienService.getAll({
+    search:     sp.get('q')     ?? undefined,
+    tipePasien: (sp.get('tipe') as 'WNI' | 'WNA' | null) ?? undefined,
+    isActive:   sp.get('isActive') !== 'false',
+    page:       Number(sp.get('page')  ?? 1),
+    limit:      Number(sp.get('limit') ?? 20),
   });
 
-  return NextResponse.json({ success: true, data: result } satisfies ApiResponse<typeof result>);
+  return NextResponse.json(result);
 }
 
 export async function POST(req: NextRequest) {
   const session = await auth();
-  if (!session) return NextResponse.json({ success: false, error: "Unauthorized" } satisfies ApiResponse<never>, { status: 401 });
+  if (!session?.user)                          return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!CAN_CREATE.includes(session.user.role)) return NextResponse.json({ error: 'Forbidden' },    { status: 403 });
+
+  const body   = await req.json();
+  const parsed = createPasienSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Validasi gagal', details: parsed.error.flatten() }, { status: 400 });
+  }
 
   try {
-    const body = await req.json();
-    const pasien = await createPasien({
-      ...body,
-      tanggalLahir: new Date(body.tanggalLahir),
-    });
-    return NextResponse.json({ success: true, data: pasien } satisfies ApiResponse<typeof pasien>, { status: 201 });
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Terjadi kesalahan";
-    return NextResponse.json({ success: false, error: message } satisfies ApiResponse<never>, { status: 400 });
+    const pasien = await pasienService.create(parsed.data, session.user.id);
+    return NextResponse.json(pasien, { status: 201 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Terjadi kesalahan';
+    return NextResponse.json({ error: message }, { status: 422 });
   }
 }
