@@ -1,0 +1,412 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ──────────────────────────────────────────
+// ENUM
+// ──────────────────────────────────────────
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  DOKTER
+  PERAWAT
+  APOTEKER
+  KASIR
+  REKAM_MEDIS
+  PASIEN
+}
+
+enum JenisKelamin {
+  LAKI_LAKI
+  PEREMPUAN
+}
+
+enum StatusKunjungan {
+  MENUNGGU
+  DALAM_PEMERIKSAAN
+  SELESAI
+  DIBATALKAN
+}
+
+enum StatusRawatInap {
+  AKTIF
+  KELUAR
+  PINDAH_RUANG
+}
+
+enum StatusResep {
+  MENUNGGU
+  DIPROSES
+  SIAP
+  DIAMBIL
+}
+
+enum StatusBilling {
+  BELUM_BAYAR
+  SEBAGIAN
+  LUNAS
+  DIBATALKAN
+}
+
+enum MetodePembayaran {
+  TUNAI
+  TRANSFER
+  BPJS
+  ASURANSI
+  KARTU_DEBIT
+  KARTU_KREDIT
+}
+
+// ──────────────────────────────────────────
+// USER & AUTENTIKASI
+// ──────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  nama          String
+  email         String    @unique
+  password      String
+  role          Role      @default(PASIEN)
+  isActive      Boolean   @default(true)
+  foto          String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  dokter        Dokter?
+  perawat       Perawat?
+  pasien        Pasien?
+  sessions      Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// ──────────────────────────────────────────
+// MASTER DATA
+// ──────────────────────────────────────────
+
+model Klinik {
+  id        String   @id @default(cuid())
+  nama      String
+  alamat    String
+  telepon   String?
+  email     String?
+  logo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("klinik")
+}
+
+model Poli {
+  id        String    @id @default(cuid())
+  nama      String
+  kode      String    @unique
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+
+  dokter    Dokter[]
+  kunjungan Kunjungan[]
+
+  @@map("poli")
+}
+
+model Dokter {
+  id           String    @id @default(cuid())
+  userId       String    @unique
+  nip          String?   @unique
+  sip          String?
+  spesialisasi String?
+  jadwalPraktek Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user         User      @relation(fields: [userId], references: [id])
+  poli         Poli?     @relation(fields: [poliId], references: [id])
+  poliId       String?
+  kunjungan    Kunjungan[]
+  resep        Resep[]
+
+  @@map("dokter")
+}
+
+model Perawat {
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  nip       String?   @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user      User      @relation(fields: [userId], references: [id])
+  asesmen   AsesmenPerawat[]
+
+  @@map("perawat")
+}
+
+// ──────────────────────────────────────────
+// PASIEN
+// ──────────────────────────────────────────
+
+model Pasien {
+  id              String       @id @default(cuid())
+  userId          String?      @unique
+  nomorRM         String       @unique
+  nik             String?      @unique
+  nama            String
+  tanggalLahir    DateTime
+  jenisKelamin    JenisKelamin
+  alamat          String?
+  telepon         String?
+  email           String?
+  golonganDarah   String?
+  alergi          String?
+  noBPJS          String?
+  noAsuransi      String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  user            User?        @relation(fields: [userId], references: [id])
+  kunjungan       Kunjungan[]
+  rawatInap       RawatInap[]
+
+  @@map("pasien")
+}
+
+// ──────────────────────────────────────────
+// KUNJUNGAN & PEMERIKSAAN
+// ──────────────────────────────────────────
+
+model Kunjungan {
+  id             String          @id @default(cuid())
+  nomorAntrean   String
+  pasienId       String
+  dokterId       String?
+  poliId         String?
+  tanggal        DateTime        @default(now())
+  keluhan        String?
+  status         StatusKunjungan  @default(MENUNGGU)
+  tipePembayaran String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  pasien         Pasien          @relation(fields: [pasienId], references: [id])
+  dokter         Dokter?         @relation(fields: [dokterId], references: [id])
+  poli           Poli?           @relation(fields: [poliId], references: [id])
+  asesmen        AsesmenPerawat?
+  soap           SOAPNote?
+  resep          Resep[]
+  billing        Billing?
+  tindakan       Tindakan[]
+
+  @@map("kunjungan")
+}
+
+model AsesmenPerawat {
+  id            String    @id @default(cuid())
+  kunjunganId   String    @unique
+  perawatId     String?
+  beratBadan    Float?
+  tinggiBadan   Float?
+  tekananDarah  String?
+  nadi          Int?
+  suhu          Float?
+  saturasi      Float?
+  gds           Float?
+  anamnesisAwal String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  kunjungan     Kunjungan @relation(fields: [kunjunganId], references: [id])
+  perawat       Perawat?  @relation(fields: [perawatId], references: [id])
+
+  @@map("asesmen_perawat")
+}
+
+model SOAPNote {
+  id            String    @id @default(cuid())
+  kunjunganId   String    @unique
+  subjektif     String?   @db.Text
+  objektif      String?   @db.Text
+  asesmen       String?   @db.Text
+  plan          String?   @db.Text
+  icdCodes      Json?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  kunjungan     Kunjungan @relation(fields: [kunjunganId], references: [id])
+
+  @@map("soap_note")
+}
+
+// ──────────────────────────────────────────
+// RAWAT INAP
+// ──────────────────────────────────────────
+
+model Kamar {
+  id         String    @id @default(cuid())
+  nomorKamar String    @unique
+  kelas      String
+  kapasitas  Int       @default(1)
+  tarif      Float
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+
+  rawatInap  RawatInap[]
+
+  @@map("kamar")
+}
+
+model RawatInap {
+  id            String          @id @default(cuid())
+  pasienId      String
+  kamarId       String
+  tanggalMasuk  DateTime
+  tanggalKeluar DateTime?
+  diagnosa      String?
+  status        StatusRawatInap @default(AKTIF)
+  catatan       String?         @db.Text
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  pasien        Pasien          @relation(fields: [pasienId], references: [id])
+  kamar         Kamar           @relation(fields: [kamarId], references: [id])
+
+  @@map("rawat_inap")
+}
+
+// ──────────────────────────────────────────
+// FARMASI
+// ──────────────────────────────────────────
+
+model Obat {
+  id          String    @id @default(cuid())
+  kode        String    @unique
+  nama        String
+  generik     String?
+  satuan      String
+  stok        Int       @default(0)
+  harga       Float
+  hargaBeli   Float?
+  kategori    String?
+  isActive    Boolean   @default(true)
+  expiredDate DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  itemResep   ItemResep[]
+
+  @@map("obat")
+}
+
+model Resep {
+  id          String      @id @default(cuid())
+  kunjunganId String
+  dokterId    String?
+  status      StatusResep @default(MENUNGGU)
+  catatan     String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  kunjungan   Kunjungan   @relation(fields: [kunjunganId], references: [id])
+  dokter      Dokter?     @relation(fields: [dokterId], references: [id])
+  items       ItemResep[]
+
+  @@map("resep")
+}
+
+model ItemResep {
+  id          String  @id @default(cuid())
+  resepId     String
+  obatId      String
+  jumlah      Int
+  aturanPakai String?
+  catatan     String?
+
+  resep       Resep   @relation(fields: [resepId], references: [id])
+  obat        Obat    @relation(fields: [obatId], references: [id])
+
+  @@map("item_resep")
+}
+
+// ──────────────────────────────────────────
+// TINDAKAN MEDIS
+// ──────────────────────────────────────────
+
+model MasterTindakan {
+  id       String  @id @default(cuid())
+  kode     String  @unique
+  nama     String
+  tarif    Float
+  kategori String?
+
+  tindakan Tindakan[]
+
+  @@map("master_tindakan")
+}
+
+model Tindakan {
+  id               String         @id @default(cuid())
+  kunjunganId      String
+  masterTindakanId String
+  jumlah           Int            @default(1)
+  catatan          String?
+  createdAt        DateTime       @default(now())
+
+  kunjungan        Kunjungan      @relation(fields: [kunjunganId], references: [id])
+  masterTindakan   MasterTindakan @relation(fields: [masterTindakanId], references: [id])
+
+  @@map("tindakan")
+}
+
+// ──────────────────────────────────────────
+// BILLING & PEMBAYARAN
+// ──────────────────────────────────────────
+
+model Billing {
+  id           String        @id @default(cuid())
+  kunjunganId  String        @unique
+  nomorInvoice String        @unique
+  totalTagihan Float
+  totalBayar   Float         @default(0)
+  sisa         Float
+  status       StatusBilling @default(BELUM_BAYAR)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  kunjungan    Kunjungan     @relation(fields: [kunjunganId], references: [id])
+  pembayaran   Pembayaran[]
+
+  @@map("billing")
+}
+
+model Pembayaran {
+  id        String           @id @default(cuid())
+  billingId String
+  jumlah    Float
+  metode    MetodePembayaran
+  referensi String?
+  tanggal   DateTime         @default(now())
+  createdAt DateTime         @default(now())
+
+  billing   Billing          @relation(fields: [billingId], references: [id])
+
+  @@map("pembayaran")
+}

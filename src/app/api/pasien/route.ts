@@ -1,0 +1,35 @@
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { getPasienList, createPasien } from "@/services/patient.service";
+import type { ApiResponse } from "@/types";
+
+export async function GET(req: NextRequest) {
+  const session = await auth();
+  if (!session) return NextResponse.json({ success: false, error: "Unauthorized" } satisfies ApiResponse<never>, { status: 401 });
+
+  const { searchParams } = req.nextUrl;
+  const result = await getPasienList({
+    page:   Number(searchParams.get("page")  ?? 1),
+    limit:  Number(searchParams.get("limit") ?? 20),
+    search: searchParams.get("search") ?? undefined,
+  });
+
+  return NextResponse.json({ success: true, data: result } satisfies ApiResponse<typeof result>);
+}
+
+export async function POST(req: NextRequest) {
+  const session = await auth();
+  if (!session) return NextResponse.json({ success: false, error: "Unauthorized" } satisfies ApiResponse<never>, { status: 401 });
+
+  try {
+    const body = await req.json();
+    const pasien = await createPasien({
+      ...body,
+      tanggalLahir: new Date(body.tanggalLahir),
+    });
+    return NextResponse.json({ success: true, data: pasien } satisfies ApiResponse<typeof pasien>, { status: 201 });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Terjadi kesalahan";
+    return NextResponse.json({ success: false, error: message } satisfies ApiResponse<never>, { status: 400 });
+  }
+}
