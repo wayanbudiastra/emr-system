@@ -132,12 +132,12 @@ export const masterdataRepository = {
     return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
   },
 
-  async createPeralatan(data: { kode: string; nama: string; merk?: string; nomorSeri?: string; deskripsi?: string }) {
+  async createPeralatan(data: { kode: string; nama: string; merk?: string; nomorSeri?: string; deskripsi?: string; tarif?: number; tarifBPJS?: number }) {
     const prisma = await getPrisma();
     return prisma.peralatanMedis.create({ data });
   },
 
-  async updatePeralatan(id: string, data: Partial<{ nama: string; merk: string; deskripsi: string; status: StatusPeralatan; lokasiTerakhir: string; tanggalKalibrasi: Date }>) {
+  async updatePeralatan(id: string, data: Partial<{ nama: string; merk: string; deskripsi: string; tarif: number; tarifBPJS: number; status: StatusPeralatan; lokasiTerakhir: string; tanggalKalibrasi: Date }>) {
     const prisma = await getPrisma();
     return prisma.peralatanMedis.update({ where: { id }, data });
   },
