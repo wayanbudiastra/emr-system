@@ -49,7 +49,7 @@ export default function EditPasienPage({ params }: { params: Promise<{ id: strin
     return (
       <div className="text-center py-20 text-muted-foreground">
         <p>Pasien tidak ditemukan.</p>
-        <Button variant="link" className="mt-2" render={<Link href="/pasien" />}>
+        <Button variant="link" className="mt-2" nativeButton={false} render={<Link href="/pasien" />}>
           Kembali ke daftar
         </Button>
       </div>
@@ -61,7 +61,7 @@ export default function EditPasienPage({ params }: { params: Promise<{ id: strin
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" className="shrink-0" render={<Link href={`/pasien/${id}`} />}>
+        <Button variant="ghost" size="icon" className="shrink-0" nativeButton={false} render={<Link href={`/pasien/${id}`} />}>
           <ChevronLeft className="h-5 w-5" />
         </Button>
         <div>
