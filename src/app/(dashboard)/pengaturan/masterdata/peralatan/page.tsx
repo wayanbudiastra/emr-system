@@ -29,8 +29,8 @@ const STATUS_COLORS: Record<string, string> = {
   RUSAK:       "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
 };
 
-async function fetchPeralatan(status: string, search: string) {
-  const q = new URLSearchParams({ limit: "50" });
+async function fetchPeralatan(status: string, search: string, page: number) {
+  const q = new URLSearchParams({ limit: "10", page: String(page) });
   if (status !== "ALL") q.set("status", status);
   if (search) q.set("search", search);
   const r = await fetch(`/api/masterdata/peralatan?${q}`);
