@@ -14,6 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PageControls } from "@/components/ui/page-controls";
 
 type Poli = { id: string; nama: string; kode: string };
 type Tindakan = { id: string; kode: string; nama: string; tarif: number; tarifBPJS?: number | null; isActive: boolean; poliMapping: { poli: Poli }[] };
