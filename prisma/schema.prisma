@@ -469,6 +469,8 @@ model PeralatanMedis {
   merk              String?
   nomorSeri         String?         @unique
   deskripsi         String?
+  tarif             Float?
+  tarifBPJS         Float?
   status            StatusPeralatan @default(TERSEDIA)
   lokasiTerakhir    String?
   poliTerakhirId    String?
