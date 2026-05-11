@@ -122,7 +122,7 @@ export default function LaboratoriumPage() {
             {isLoading ? Array.from({ length: 5 }).map((_, i) => (
               <TableRow key={i}>{Array.from({ length: 5 }).map((_, j) => <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>)}</TableRow>
             )) : items.length === 0 ? (
-              <TableRow><TableCell colSpan={5} className="text-center py-12 text-muted-foreground">Tidak ada item laboratorium</TableCell></TableRow>
+              <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">Tidak ada item laboratorium</TableCell></TableRow>
             ) : items.map(item => (
               <TableRow key={item.id}>
                 <TableCell><div><p className="font-medium text-sm">{item.nama}</p><p className="text-xs text-muted-foreground">{item.kode}</p></div></TableCell>
