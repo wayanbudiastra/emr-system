@@ -10,9 +10,7 @@ import {
   Receipt,
   BarChart3,
   Settings,
-  Database,
-  Building2,
-  Cpu,
+  Activity,
   type LucideIcon,
 } from "lucide-react";
 
