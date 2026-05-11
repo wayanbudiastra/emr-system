@@ -28,7 +28,11 @@ async function fetchPenunjang(kategori: string, search: string) {
 }
 
 function PenunjangForm({ open, onClose, item, onSuccess }: { open: boolean; onClose: () => void; item?: Item | null; onSuccess: () => void }) {
-  const [form, setForm] = useState({ kode: item?.kode ?? "", nama: item?.nama ?? "", kategori: item?.kategori ?? "LAB", tarif: item?.tarif ?? 0, tarifBPJS: item?.tarifBPJS ?? "", satuanWaktu: item?.satuanWaktu ?? "", deskripsi: "" });
+  const [form, setForm] = useState({ kode: "", nama: "", kategori: "LAB", tarif: 0, tarifBPJS: "" as string | number, satuanWaktu: "", deskripsi: "" });
+
+  useEffect(() => {
+    setForm({ kode: item?.kode ?? "", nama: item?.nama ?? "", kategori: item?.kategori ?? "LAB", tarif: item?.tarif ?? 0, tarifBPJS: item?.tarifBPJS ?? "", satuanWaktu: item?.satuanWaktu ?? "", deskripsi: "" });
+  }, [open]);
 
   const mutation = useMutation({
     mutationFn: async () => {
