@@ -17,8 +17,8 @@ import { PageControls } from "@/components/ui/page-controls";
 
 type Item = { id: string; kode: string; nama: string; tarif: number; tarifBPJS?: number | null; satuanWaktu?: string | null; isActive: boolean };
 
-async function fetchRad(search: string) {
-  const q = new URLSearchParams({ limit: "50", kategori: "RADIOLOGI" });
+async function fetchRad(search: string, page: number) {
+  const q = new URLSearchParams({ limit: "10", kategori: "RADIOLOGI", page: String(page) });
   if (search) q.set("search", search);
   const r = await fetch(`/api/masterdata/penunjang?${q}`);
   if (!r.ok) throw new Error();
