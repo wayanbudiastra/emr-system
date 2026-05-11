@@ -182,7 +182,7 @@ export default function PeralatanPage() {
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Cpu className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <Cpu className="h-4 w-4 text-muted-foreground shrink-0" />
                     <div>
                       <p className="font-medium text-sm">{item.nama}</p>
                       <p className="text-xs text-muted-foreground">{item.kode}{item.merk ? ` · ${item.merk}` : ""}</p>
