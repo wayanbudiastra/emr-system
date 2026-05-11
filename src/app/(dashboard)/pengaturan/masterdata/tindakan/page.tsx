@@ -20,7 +20,7 @@ type Poli = { id: string; nama: string; kode: string };
 type Tindakan = { id: string; kode: string; nama: string; tarif: number; tarifBPJS?: number | null; isActive: boolean; poliMapping: { poli: Poli }[] };
 
 async function fetchPoli() { const r = await fetch("/api/masterdata/poli"); if (!r.ok) throw new Error(); return r.json() as Promise<Poli[]>; }
-async function fetchTindakan(search: string) { const r = await fetch(`/api/masterdata/tindakan?search=${search}&limit=50`); if (!r.ok) throw new Error(); return r.json(); }
+async function fetchTindakan(search: string, page: number) { const r = await fetch(`/api/masterdata/tindakan?search=${encodeURIComponent(search)}&limit=10&page=${page}`); if (!r.ok) throw new Error(); return r.json(); }
 
 function TindakanForm({ open, onClose, item, poliList, onSuccess }: { open: boolean; onClose: () => void; item?: Tindakan | null; poliList: Poli[]; onSuccess: () => void }) {
   const [form, setForm] = useState({ nama: "", kode: "", tarif: 0, tarifBPJS: "" as string | number, deskripsi: "" });
