@@ -138,7 +138,7 @@ export default function TindakanPage() {
               {isLoading ? Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>{Array.from({ length: 5 }).map((_, j) => <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>)}</TableRow>
               )) : tindakanList.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center py-12 text-muted-foreground">Tidak ada tindakan</TableCell></TableRow>
+                <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">Tidak ada tindakan</TableCell></TableRow>
               ) : tindakanList.map(t => (
                 <TableRow key={t.id} className={!t.isActive ? "opacity-60" : ""}>
                   <TableCell>
