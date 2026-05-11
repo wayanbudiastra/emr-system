@@ -146,6 +146,7 @@ export default function RadiologiPage() {
             ))}
           </TableBody>
         </Table>
+        <PageControls page={page} totalPages={totalPages} total={total} limit={10} onPageChange={setPage} />
       </CardContent></Card>
 
       <RadForm open={createOpen} onClose={() => setCreateOpen(false)} onSuccess={refresh} />
