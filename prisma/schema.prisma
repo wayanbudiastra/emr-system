@@ -14,13 +14,11 @@ datasource db {
 
 enum Role {
   SUPER_ADMIN
-  ADMIN
+  ADMISSION
+  KASIR
   DOKTER
   PERAWAT
   APOTEKER
-  KASIR
-  REKAM_MEDIS
-  PASIEN
 }
 
 enum JenisKelamin {
@@ -69,22 +67,41 @@ enum MetodePembayaran {
 // ──────────────────────────────────────────
 
 model User {
-  id            String    @id @default(cuid())
-  nama          String
-  email         String    @unique
-  password      String
-  role          Role      @default(PASIEN)
-  isActive      Boolean   @default(true)
-  foto          String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                String    @id @default(cuid())
+  nama              String
+  email             String    @unique
+  password          String
+  role              Role      @default(ADMISSION)
+  nip               String?   @unique
+  telepon           String?
+  isActive          Boolean   @default(true)
+  foto              String?
+  lastLoginAt       DateTime?
+  passwordChangedAt DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   dokter        Dokter?
   perawat       Perawat?
-  pasien        Pasien?
   sessions      Session[]
+  activityLogs  ActivityLog[]
 
   @@map("users")
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  userId     String
+  action     String
+  resource   String
+  resourceId String?
+  detail     Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("activity_logs")
 }
 
 model Session {
@@ -167,7 +184,6 @@ model Perawat {
 
 model Pasien {
   id              String       @id @default(cuid())
-  userId          String?      @unique
   nomorRM         String       @unique
   nik             String?      @unique
   nama            String
@@ -183,7 +199,6 @@ model Pasien {
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
-  user            User?        @relation(fields: [userId], references: [id])
   kunjungan       Kunjungan[]
   rawatInap       RawatInap[]
 

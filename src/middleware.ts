@@ -10,30 +10,28 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
-  // Public paths
   const publicPaths = ["/login", "/register"];
   if (publicPaths.some((p) => pathname.startsWith(p))) {
-    if (session) {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
+    if (session) return NextResponse.redirect(new URL("/dashboard", req.url));
     return NextResponse.next();
   }
 
-  // Redirect root to dashboard or login
   if (pathname === "/") {
-    if (session) {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
+    return NextResponse.redirect(
+      new URL(session ? "/dashboard" : "/login", req.url)
+    );
+  }
+
+  if (!session?.user) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // Redirect to login if not authenticated
-  if (!session) {
-    return NextResponse.redirect(new URL("/login", req.url));
+  // Blokir user nonaktif — hanya jika isActive eksplisit false (bukan undefined dari token lama)
+  if (session.user.isActive === false) {
+    return NextResponse.redirect(new URL("/login?error=ACCOUNT_DISABLED", req.url));
   }
 
-  // Check role-based access
-  const userRole = session.user?.role as Role;
+  const userRole = session.user.role as Role;
   if (userRole && !hasRouteAccess(userRole, pathname)) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }

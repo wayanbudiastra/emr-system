@@ -21,54 +21,56 @@ export interface NavItem {
   children?: NavItem[];
 }
 
+const ALL_ROLES: Role[] = [Role.SUPER_ADMIN, Role.ADMISSION, Role.KASIR, Role.DOKTER, Role.PERAWAT, Role.APOTEKER];
+
 export const navConfig: NavItem[] = [
   {
     title: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.DOKTER, Role.PERAWAT, Role.APOTEKER, Role.KASIR, Role.REKAM_MEDIS],
+    roles: ALL_ROLES,
   },
   {
     title: "Pasien",
     href: "/pasien",
     icon: Users,
-    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.DOKTER, Role.PERAWAT, Role.REKAM_MEDIS],
+    roles: [Role.SUPER_ADMIN, Role.ADMISSION, Role.DOKTER, Role.PERAWAT],
   },
   {
     title: "Pendaftaran",
     href: "/pendaftaran",
     icon: ClipboardList,
-    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.PERAWAT, Role.REKAM_MEDIS],
+    roles: [Role.SUPER_ADMIN, Role.ADMISSION, Role.PERAWAT],
   },
   {
     title: "Pemeriksaan",
     href: "/pemeriksaan",
     icon: Stethoscope,
-    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.DOKTER, Role.PERAWAT],
+    roles: [Role.SUPER_ADMIN, Role.DOKTER, Role.PERAWAT],
   },
   {
     title: "Rawat Inap",
     href: "/rawat-inap",
     icon: BedDouble,
-    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.DOKTER, Role.PERAWAT],
+    roles: [Role.SUPER_ADMIN, Role.DOKTER, Role.PERAWAT, Role.ADMISSION],
   },
   {
     title: "Farmasi",
     href: "/farmasi",
     icon: Pill,
-    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.APOTEKER, Role.DOKTER],
+    roles: [Role.SUPER_ADMIN, Role.APOTEKER, Role.DOKTER],
     children: [
       {
         title: "Resep",
         href: "/farmasi/resep",
         icon: Pill,
-        roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.APOTEKER, Role.DOKTER],
+        roles: [Role.SUPER_ADMIN, Role.APOTEKER, Role.DOKTER],
       },
       {
         title: "Stok Obat",
         href: "/farmasi/stok-obat",
         icon: FlaskConical,
-        roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.APOTEKER],
+        roles: [Role.SUPER_ADMIN, Role.APOTEKER],
       },
     ],
   },
@@ -76,31 +78,31 @@ export const navConfig: NavItem[] = [
     title: "Billing",
     href: "/billing",
     icon: Receipt,
-    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.KASIR],
+    roles: [Role.SUPER_ADMIN, Role.KASIR],
   },
   {
     title: "Laporan",
     href: "/laporan",
     icon: BarChart3,
-    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.DOKTER, Role.REKAM_MEDIS, Role.KASIR],
+    roles: [Role.SUPER_ADMIN, Role.DOKTER, Role.KASIR, Role.APOTEKER],
   },
   {
     title: "Pengaturan",
     href: "/pengaturan",
     icon: Settings,
-    roles: [Role.SUPER_ADMIN, Role.ADMIN],
+    roles: [Role.SUPER_ADMIN],
     children: [
       {
         title: "Pengguna",
         href: "/pengaturan/pengguna",
         icon: Users,
-        roles: [Role.SUPER_ADMIN, Role.ADMIN],
+        roles: [Role.SUPER_ADMIN],
       },
       {
         title: "Klinik",
         href: "/pengaturan/klinik",
         icon: Settings,
-        roles: [Role.SUPER_ADMIN, Role.ADMIN],
+        roles: [Role.SUPER_ADMIN],
       },
     ],
   },

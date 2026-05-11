@@ -53,7 +53,7 @@ export default function DashboardLayout({
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const userRole = (session?.user?.role as Role) || "ADMIN";
+  const userRole = (session?.user?.role as Role) || "ADMISSION";
   const navItems = getNavItemsForRole(userRole);
   const userName = session?.user?.name || "User";
   const userEmail = session?.user?.email || "";
