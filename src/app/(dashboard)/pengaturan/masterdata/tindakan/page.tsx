@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/constants";
-import { Plus, Search, RefreshCw, Pencil, Trash2, Tags } from "lucide-react";
+import { Plus, Search, RefreshCw, Pencil, Tags } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,11 +36,11 @@ function TindakanForm({ open, onClose, item, poliList, onSuccess }: { open: bool
     mutationFn: async () => {
       const url = item ? `/api/masterdata/tindakan/${item.id}` : "/api/masterdata/tindakan";
       const method = item ? "PUT" : "POST";
-      const body = item ? { nama: form.nama, tarif: Number(form.tarif), tarifBPJS: form.tarifBPJS ? Number(form.tarifBPJS) : undefined }
-                        : { ...form, kode: form.kode.toUpperCase(), tarif: Number(form.tarif), tarifBPJS: form.tarifBPJS ? Number(form.tarifBPJS) : undefined, poliIds: selectedPoli };
+      const body = item
+        ? { nama: form.nama, tarif: Number(form.tarif), tarifBPJS: form.tarifBPJS ? Number(form.tarifBPJS) : undefined }
+        : { ...form, kode: form.kode.toUpperCase(), tarif: Number(form.tarif), tarifBPJS: form.tarifBPJS ? Number(form.tarifBPJS) : undefined, poliIds: selectedPoli };
       const r = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       if (!r.ok) { const e = await r.json(); throw new Error(e.error?.formErrors?.[0] ?? e.error ?? "Error"); }
-      // Update mapping jika edit
       if (item) {
         await fetch(`/api/masterdata/tindakan/${item.id}/mapping`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ poliIds: selectedPoli }) });
       }
@@ -96,10 +96,11 @@ export default function TindakanPage() {
   const { data, isLoading } = useQuery({ queryKey: ["tindakan", search], queryFn: () => fetchTindakan(search) });
   const tindakanList: Tindakan[] = data?.data ?? [];
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => fetch(`/api/masterdata/tindakan/${id}`, { method: "DELETE" }).then(r => { if (!r.ok) throw new Error("Gagal menghapus"); }),
-    onSuccess: () => { toast.success("Tindakan dihapus"); refresh(); },
-    onError: (e: Error) => toast.error(e.message),
+  const toggleMutation = useMutation({
+    mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
+      fetch(`/api/masterdata/tindakan/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ isActive }) }),
+    onSuccess: () => { toast.success("Status diperbarui"); refresh(); },
+    onError: () => toast.error("Gagal memperbarui status"),
   });
 
   return (
@@ -123,16 +124,17 @@ export default function TindakanPage() {
                 <TableHead>Tindakan</TableHead>
                 <TableHead>Tarif</TableHead>
                 <TableHead className="hidden lg:table-cell">Mapping Poli</TableHead>
-                <TableHead className="w-20"></TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="w-16"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>{Array.from({ length: 4 }).map((_, j) => <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>)}</TableRow>
+                <TableRow key={i}>{Array.from({ length: 5 }).map((_, j) => <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>)}</TableRow>
               )) : tindakanList.length === 0 ? (
-                <TableRow><TableCell colSpan={4} className="text-center py-12 text-muted-foreground">Tidak ada tindakan</TableCell></TableRow>
+                <TableRow><TableCell colSpan={5} className="text-center py-12 text-muted-foreground">Tidak ada tindakan</TableCell></TableRow>
               ) : tindakanList.map(t => (
-                <TableRow key={t.id}>
+                <TableRow key={t.id} className={!t.isActive ? "opacity-60" : ""}>
                   <TableCell>
                     <div>
                       <p className="font-medium text-sm">{t.nama}</p>
@@ -152,9 +154,14 @@ export default function TindakanPage() {
                     </div>
                   </TableCell>
                   <TableCell>
+                    <Badge variant={t.isActive ? "default" : "secondary"}>{t.isActive ? "Aktif" : "Nonaktif"}</Badge>
+                  </TableCell>
+                  <TableCell>
                     <div className="flex gap-1">
                       <Button variant="ghost" size="icon" onClick={() => setEditItem(t)}><Pencil className="h-4 w-4" /></Button>
-                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => { if (confirm("Hapus tindakan ini?")) deleteMutation.mutate(t.id); }}><Trash2 className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="icon" onClick={() => toggleMutation.mutate({ id: t.id, isActive: !t.isActive })}>
+                        <span className={`text-xs font-medium ${t.isActive ? "text-yellow-600" : "text-green-600"}`}>{t.isActive ? "OFF" : "ON"}</span>
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
