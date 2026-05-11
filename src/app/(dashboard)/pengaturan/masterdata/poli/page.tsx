@@ -133,6 +133,7 @@ export default function PoliPage() {
               ))}
             </TableBody>
           </Table>
+          <PageControls page={page} totalPages={totalPages} total={total} limit={PAGE_SIZE} onPageChange={setPage} />
         </CardContent>
       </Card>
 
