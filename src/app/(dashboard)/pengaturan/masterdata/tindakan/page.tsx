@@ -89,13 +89,18 @@ function TindakanForm({ open, onClose, item, poliList, onSuccess }: { open: bool
 export default function TindakanPage() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const [editItem, setEditItem] = useState<Tindakan | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const refresh = () => qc.invalidateQueries({ queryKey: ["tindakan"] });
 
+  useEffect(() => { setPage(1); }, [search]);
+
   const { data: poliList = [] } = useQuery({ queryKey: ["poli"], queryFn: fetchPoli });
-  const { data, isLoading } = useQuery({ queryKey: ["tindakan", search], queryFn: () => fetchTindakan(search) });
+  const { data, isLoading } = useQuery({ queryKey: ["tindakan", search, page], queryFn: () => fetchTindakan(search, page) });
   const tindakanList: Tindakan[] = data?.data ?? [];
+  const total      = data?.total ?? 0;
+  const totalPages = data?.totalPages ?? 1;
 
   const toggleMutation = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
