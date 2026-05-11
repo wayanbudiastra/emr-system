@@ -211,6 +211,7 @@ export default function PeralatanPage() {
             ))}
           </TableBody>
         </Table>
+        <PageControls page={page} totalPages={totalPages} total={total} limit={10} onPageChange={setPage} />
       </CardContent></Card>
 
       <PeralatanForm open={createOpen} onClose={() => setCreateOpen(false)} onSuccess={refresh} />
