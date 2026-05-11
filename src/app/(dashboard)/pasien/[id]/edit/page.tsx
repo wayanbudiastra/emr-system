@@ -61,10 +61,8 @@ export default function EditPasienPage({ params }: { params: Promise<{ id: strin
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" asChild className="shrink-0">
-          <Link href={`/pasien/${id}`}>
-            <ChevronLeft className="h-5 w-5" />
-          </Link>
+        <Button variant="ghost" size="icon" className="shrink-0" render={<Link href={`/pasien/${id}`} />}>
+          <ChevronLeft className="h-5 w-5" />
         </Button>
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
