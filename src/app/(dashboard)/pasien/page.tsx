@@ -56,7 +56,7 @@ export default function PasienPage() {
             Kelola pendaftaran dan data demografi pasien
           </p>
         </div>
-        <Button className="gap-2" render={<Link href="/pasien/tambah" />}>
+        <Button className="gap-2" nativeButton={false} render={<Link href="/pasien/tambah" />}>
           <Plus className="h-4 w-4" /> Daftar Pasien Baru
         </Button>
       </div>
@@ -173,10 +173,10 @@ export default function PasienPage() {
                     </TableCell>
                     <TableCell onClick={e => e.stopPropagation()}>
                       <div className="flex items-center justify-center gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" render={<Link href={`/pasien/${pasien.id}`} />}>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" nativeButton={false} render={<Link href={`/pasien/${pasien.id}`} />}>
                           <Eye className="h-3.5 w-3.5" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" render={<Link href={`/pasien/${pasien.id}/edit`} />}>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" nativeButton={false} render={<Link href={`/pasien/${pasien.id}/edit`} />}>
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
                       </div>
