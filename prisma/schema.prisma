@@ -12,6 +12,37 @@ datasource db {
 // ENUM
 // ──────────────────────────────────────────
 
+enum TipePasien {
+  WNI
+  WNA
+}
+
+enum GolonganDarah {
+  A
+  B
+  AB
+  O
+  TIDAK_DIKETAHUI
+}
+
+enum HubunganKontak {
+  SUAMI
+  ISTRI
+  AYAH
+  IBU
+  ANAK
+  KAKAK
+  ADIK
+  KAKEK
+  NENEK
+  PAMAN
+  BIBI
+  KEPONAKAN
+  TEMAN
+  REKAN_KERJA
+  LAINNYA
+}
+
 enum Role {
   SUPER_ADMIN
   ADMISSION
