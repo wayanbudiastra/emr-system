@@ -105,6 +105,9 @@ async function main() {
     // ── Masterdata V2 ──────────────────────────────────────
     await seedMasterdataV2(prisma);
 
+    // ── Pasien ─────────────────────────────────────────────
+    await seedPasien(prisma);
+
     console.log("\n✅ Seeding selesai!");
     console.log("📋 Default password semua akun: Admin@1234");
     console.log("⚠️  Segera ganti password setelah login pertama!");
