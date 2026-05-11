@@ -80,7 +80,7 @@ export const masterdataService = {
     return masterdataRepository.createPeralatan(dto);
   },
 
-  async updatePeralatan(id: string, dto: { nama?: string; merk?: string; deskripsi?: string; status?: string; lokasiTerakhir?: string; tanggalKalibrasi?: string }) {
+  async updatePeralatan(id: string, dto: { nama?: string; merk?: string; deskripsi?: string; tarif?: number; tarifBPJS?: number; status?: string; lokasiTerakhir?: string; tanggalKalibrasi?: string }) {
     const data: Parameters<typeof masterdataRepository.updatePeralatan>[1] = {
       ...dto,
       tanggalKalibrasi: dto.tanggalKalibrasi ? new Date(dto.tanggalKalibrasi) : undefined,
