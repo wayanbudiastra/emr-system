@@ -58,13 +58,20 @@ function PoliForm({ open, onClose, poli, onSuccess }: { open: boolean; onClose: 
   );
 }
 
+const PAGE_SIZE = 10;
+
 export default function PoliPage() {
   const qc = useQueryClient();
   const [editPoli, setEditPoli] = useState<Poli | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [page, setPage] = useState(1);
   const refresh = () => qc.invalidateQueries({ queryKey: ["poli"] });
 
   const { data: poliList = [], isLoading } = useQuery({ queryKey: ["poli"], queryFn: fetchPoli });
+
+  const total      = poliList.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const paginated  = poliList.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const toggleMutation = useMutation({
     mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) => {
