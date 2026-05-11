@@ -28,7 +28,7 @@ export default function PasienPage() {
   const [search,  setSearch]  = useState('');
   const [tipe,    setTipe]    = useState('all');
   const [page,    setPage]    = useState(1);
-  const limit = 20;
+  const limit = 10;
 
   const { data, isLoading } = usePasienList({
     q:     search || undefined,
