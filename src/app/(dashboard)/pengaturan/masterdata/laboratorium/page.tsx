@@ -76,12 +76,17 @@ function LabForm({ open, onClose, item, onSuccess }: { open: boolean; onClose: (
 export default function LaboratoriumPage() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const [editItem, setEditItem] = useState<Item | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const refresh = () => qc.invalidateQueries({ queryKey: ["lab"] });
 
-  const { data, isLoading } = useQuery({ queryKey: ["lab", search], queryFn: () => fetchLab(search) });
-  const items: Item[] = data?.data ?? [];
+  useEffect(() => { setPage(1); }, [search]);
+
+  const { data, isLoading } = useQuery({ queryKey: ["lab", search, page], queryFn: () => fetchLab(search, page) });
+  const items: Item[]  = data?.data ?? [];
+  const total          = data?.total ?? 0;
+  const totalPages     = data?.totalPages ?? 1;
 
   const toggleMutation = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
