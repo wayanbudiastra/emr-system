@@ -174,6 +174,7 @@ export default function TindakanPage() {
               ))}
             </TableBody>
           </Table>
+          <PageControls page={page} totalPages={totalPages} total={total} limit={10} onPageChange={setPage} />
         </CardContent>
       </Card>
 
