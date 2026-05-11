@@ -21,102 +21,107 @@ export const kontakDaruratSchema = z.object({
   isPrimary: z.boolean().default(false),
 });
 
-// ── Pasien ─────────────────────────────────────────────────────
-export const createPasienSchema = z
-  .object({
-    nama: z
-      .string({ error: 'Nama wajib diisi' })
-      .min(3, 'Nama minimal 3 karakter').max(100)
-      .regex(rNama, 'Nama hanya huruf, spasi, atau tanda hubung (-)'),
+// ── Pasien base object (tanpa refinements, agar bisa .partial()) ─
+const pasienBaseSchema = z.object({
+  nama: z
+    .string({ error: 'Nama wajib diisi' })
+    .min(3, 'Nama minimal 3 karakter').max(100)
+    .regex(rNama, 'Nama hanya huruf, spasi, atau tanda hubung (-)'),
 
-    tempatLahir: z
-      .string({ error: 'Tempat lahir wajib diisi' })
-      .min(2, 'Tempat lahir minimal 2 karakter').max(100),
+  tempatLahir: z
+    .string({ error: 'Tempat lahir wajib diisi' })
+    .min(2, 'Tempat lahir minimal 2 karakter').max(100),
 
-    tanggalLahir: z
-      .coerce.date({ error: 'Tanggal lahir wajib diisi' })
-      .max(new Date(), 'Tanggal lahir tidak boleh di masa depan')
-      .min(new Date('1875-01-01'), 'Tanggal lahir tidak valid'),
+  tanggalLahir: z
+    .coerce.date({ error: 'Tanggal lahir wajib diisi' })
+    .max(new Date(), 'Tanggal lahir tidak boleh di masa depan')
+    .min(new Date('1875-01-01'), 'Tanggal lahir tidak valid'),
 
-    jenisKelamin: z.enum(['LAKI_LAKI', 'PEREMPUAN'] as const, {
-      error: 'Jenis kelamin wajib dipilih',
-    }),
+  jenisKelamin: z.enum(['LAKI_LAKI', 'PEREMPUAN'] as const, {
+    error: 'Jenis kelamin wajib dipilih',
+  }),
 
-    tipePasien: z.enum(['WNI', 'WNA'] as const, {
-      error: 'Tipe pasien wajib dipilih (WNI / WNA)',
-    }),
+  tipePasien: z.enum(['WNI', 'WNA'] as const, {
+    error: 'Tipe pasien wajib dipilih (WNI / WNA)',
+  }),
 
-    nik:        z.string().optional(),
-    noPaspor:   z.string().optional(),
-    negaraAsal: z.string().optional(),
+  nik:        z.string().optional(),
+  noPaspor:   z.string().optional(),
+  negaraAsal: z.string().optional(),
 
-    alamat: z
-      .string({ error: 'Alamat wajib diisi' })
-      .min(10, 'Alamat minimal 10 karakter').max(500),
+  alamat: z
+    .string({ error: 'Alamat wajib diisi' })
+    .min(10, 'Alamat minimal 10 karakter').max(500),
 
-    telepon: z
-      .string({ error: 'No. HP wajib diisi' })
-      .regex(rTelepon, 'Format: 08xxxxxxxx atau +628xxxxxxxx'),
+  telepon: z
+    .string({ error: 'No. HP wajib diisi' })
+    .regex(rTelepon, 'Format: 08xxxxxxxx atau +628xxxxxxxx'),
 
-    email:         z.string().email('Format email tidak valid').optional()
-                    .or(z.literal('')),
-    golonganDarah: z.enum(['A','B','AB','O','TIDAK_DIKETAHUI'] as const).optional(),
-    alergi:        z.string().max(1000).optional(),
-    noBPJS:        z.string().regex(rBPJS, 'Nomor BPJS harus 13 digit')
-                    .optional().or(z.literal('')),
-    noAsuransi:    z.string().optional(),
-    kontakDarurat: z.array(kontakDaruratSchema).optional().default([]),
-  })
+  email:         z.string().email('Format email tidak valid').optional()
+                  .or(z.literal('')),
+  golonganDarah: z.enum(['A','B','AB','O','TIDAK_DIKETAHUI'] as const).optional(),
+  alergi:        z.string().max(1000).optional(),
+  noBPJS:        z.string().regex(rBPJS, 'Nomor BPJS harus 13 digit')
+                  .optional().or(z.literal('')),
+  noAsuransi:    z.string().optional(),
+  kontakDarurat: z.array(kontakDaruratSchema).optional().default([]),
+});
 
-  .superRefine((data, ctx) => {
-    // WNI → NIK wajib
-    if (data.tipePasien === 'WNI') {
-      if (!data.nik) {
-        ctx.addIssue({ code: 'custom', path: ['nik'],
-          message: 'NIK wajib diisi untuk pasien WNI' });
-      } else if (!rNIK.test(data.nik)) {
-        ctx.addIssue({ code: 'custom', path: ['nik'],
-          message: 'NIK harus tepat 16 digit angka' });
-      }
-    }
-
-    // WNA → Paspor + Negara wajib
-    if (data.tipePasien === 'WNA') {
-      if (!data.noPaspor) {
-        ctx.addIssue({ code: 'custom', path: ['noPaspor'],
-          message: 'Nomor paspor wajib untuk pasien WNA' });
-      } else if (!rPaspor.test(data.noPaspor)) {
-        ctx.addIssue({ code: 'custom', path: ['noPaspor'],
-          message: 'Format paspor tidak valid (5–20 karakter alfanumerik)' });
-      }
-      if (!data.negaraAsal) {
-        ctx.addIssue({ code: 'custom', path: ['negaraAsal'],
-          message: 'Negara asal wajib untuk pasien WNA' });
-      }
-    }
-
-    // Nomor HP kontak tidak boleh sama dengan nomor HP pasien
-    data.kontakDarurat?.forEach((k, i) => {
-      if (k.nomorHP && data.telepon && k.nomorHP === data.telepon) {
-        ctx.addIssue({ code: 'custom',
-          path: ['kontakDarurat', i, 'nomorHP'],
-          message: 'Nomor HP kontak tidak boleh sama dengan nomor HP pasien',
-        });
-      }
-    });
-
-    // Max 1 primary
-    const primaries = data.kontakDarurat?.filter(k => k.isPrimary) ?? [];
-    if (primaries.length > 1) {
-      ctx.addIssue({ code: 'custom', path: ['kontakDarurat'],
-        message: 'Hanya boleh satu kontak utama (primary)' });
+// ── Shared refinement helpers ───────────────────────────────────
+function refineKontak(
+  data: { telepon?: string; kontakDarurat?: { nomorHP?: string; isPrimary?: boolean }[] },
+  ctx: z.RefinementCtx,
+) {
+  data.kontakDarurat?.forEach((k, i) => {
+    if (k.nomorHP && data.telepon && k.nomorHP === data.telepon) {
+      ctx.addIssue({ code: 'custom',
+        path: ['kontakDarurat', i, 'nomorHP'],
+        message: 'Nomor HP kontak tidak boleh sama dengan nomor HP pasien',
+      });
     }
   });
+  const primaries = data.kontakDarurat?.filter(k => k.isPrimary) ?? [];
+  if (primaries.length > 1) {
+    ctx.addIssue({ code: 'custom', path: ['kontakDarurat'],
+      message: 'Hanya boleh satu kontak utama (primary)' });
+  }
+}
 
-// tipePasien tidak bisa diubah setelah registrasi
-export const updatePasienSchema = createPasienSchema
+// ── createPasienSchema: base + semua validasi kondisional ───────
+export const createPasienSchema = pasienBaseSchema.superRefine((data, ctx) => {
+  if (data.tipePasien === 'WNI') {
+    if (!data.nik) {
+      ctx.addIssue({ code: 'custom', path: ['nik'],
+        message: 'NIK wajib diisi untuk pasien WNI' });
+    } else if (!rNIK.test(data.nik)) {
+      ctx.addIssue({ code: 'custom', path: ['nik'],
+        message: 'NIK harus tepat 16 digit angka' });
+    }
+  }
+
+  if (data.tipePasien === 'WNA') {
+    if (!data.noPaspor) {
+      ctx.addIssue({ code: 'custom', path: ['noPaspor'],
+        message: 'Nomor paspor wajib untuk pasien WNA' });
+    } else if (!rPaspor.test(data.noPaspor)) {
+      ctx.addIssue({ code: 'custom', path: ['noPaspor'],
+        message: 'Format paspor tidak valid (5–20 karakter alfanumerik)' });
+    }
+    if (!data.negaraAsal) {
+      ctx.addIssue({ code: 'custom', path: ['negaraAsal'],
+        message: 'Negara asal wajib untuk pasien WNA' });
+    }
+  }
+
+  refineKontak(data, ctx);
+});
+
+// ── updatePasienSchema: partial dari base, tipePasien dihilangkan
+// .partial() dipanggil pada ZodObject (bukan ZodEffects) agar tidak error
+export const updatePasienSchema = pasienBaseSchema
+  .omit({ tipePasien: true })
   .partial()
-  .omit({ tipePasien: true });
+  .superRefine(refineKontak);
 
 export type CreatePasienDTO  = z.infer<typeof createPasienSchema>;
 export type UpdatePasienDTO  = z.infer<typeof updatePasienSchema>;
