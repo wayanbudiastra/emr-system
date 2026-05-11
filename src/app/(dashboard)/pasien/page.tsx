@@ -173,15 +173,11 @@ export default function PasienPage() {
                     </TableCell>
                     <TableCell onClick={e => e.stopPropagation()}>
                       <div className="flex items-center justify-center gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                          <Link href={`/pasien/${pasien.id}`}>
-                            <Eye className="h-3.5 w-3.5" />
-                          </Link>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" render={<Link href={`/pasien/${pasien.id}`} />}>
+                          <Eye className="h-3.5 w-3.5" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                          <Link href={`/pasien/${pasien.id}/edit`}>
-                            <Pencil className="h-3.5 w-3.5" />
-                          </Link>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" render={<Link href={`/pasien/${pasien.id}/edit`} />}>
+                          <Pencil className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     </TableCell>
