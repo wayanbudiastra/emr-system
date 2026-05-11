@@ -103,10 +103,8 @@ export default function PasienDetailPage({ params }: { params: Promise<{ id: str
               : <><UserCheck className="h-4 w-4 mr-1.5" />Aktifkan</>
             }
           </Button>
-          <Button size="sm" asChild>
-            <Link href={`/pasien/${p.id}/edit`}>
-              <Pencil className="h-4 w-4 mr-1.5" />Edit
-            </Link>
+          <Button size="sm" render={<Link href={`/pasien/${p.id}/edit`} />}>
+            <Pencil className="h-4 w-4 mr-1.5" />Edit
           </Button>
         </div>
       </div>
