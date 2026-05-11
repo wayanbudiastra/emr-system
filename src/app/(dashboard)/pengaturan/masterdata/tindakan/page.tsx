@@ -22,8 +22,13 @@ async function fetchPoli() { const r = await fetch("/api/masterdata/poli"); if (
 async function fetchTindakan(search: string) { const r = await fetch(`/api/masterdata/tindakan?search=${search}&limit=50`); if (!r.ok) throw new Error(); return r.json(); }
 
 function TindakanForm({ open, onClose, item, poliList, onSuccess }: { open: boolean; onClose: () => void; item?: Tindakan | null; poliList: Poli[]; onSuccess: () => void }) {
-  const [form, setForm] = useState({ nama: item?.nama ?? "", kode: item?.kode ?? "", tarif: item?.tarif ?? 0, tarifBPJS: item?.tarifBPJS ?? "", deskripsi: "" });
-  const [selectedPoli, setSelectedPoli] = useState<string[]>(item?.poliMapping.map(m => m.poli.id) ?? []);
+  const [form, setForm] = useState({ nama: "", kode: "", tarif: 0, tarifBPJS: "" as string | number, deskripsi: "" });
+  const [selectedPoli, setSelectedPoli] = useState<string[]>([]);
+
+  useEffect(() => {
+    setForm({ nama: item?.nama ?? "", kode: item?.kode ?? "", tarif: item?.tarif ?? 0, tarifBPJS: item?.tarifBPJS ?? "", deskripsi: "" });
+    setSelectedPoli(item?.poliMapping.map(m => m.poli.id) ?? []);
+  }, [open]);
 
   const togglePoli = (id: string) => setSelectedPoli(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
 
