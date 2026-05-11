@@ -18,8 +18,8 @@ import { PageControls } from "@/components/ui/page-controls";
 
 type Peralatan = {
   id: string; kode: string; nama: string; merk?: string | null;
-  nomorSeri?: string | null; status: string; lokasiTerakhir?: string | null;
-  tarif?: number | null; tarifBPJS?: number | null;
+  nomorSeri?: string | null; deskripsi?: string | null; status: string;
+  lokasiTerakhir?: string | null; tarif?: number | null; tarifBPJS?: number | null;
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -51,7 +51,7 @@ function PeralatanForm({ open, onClose, item, onSuccess }: { open: boolean; onCl
       nama: item?.nama ?? "",
       merk: item?.merk ?? "",
       nomorSeri: item?.nomorSeri ?? "",
-      deskripsi: "",
+      deskripsi: item?.deskripsi ?? "",
       tarif: item?.tarif ?? "",
       tarifBPJS: item?.tarifBPJS ?? "",
       status: item?.status ?? "TERSEDIA",
@@ -66,8 +66,8 @@ function PeralatanForm({ open, onClose, item, onSuccess }: { open: boolean; onCl
       const body = {
         ...form,
         kode: form.kode.toUpperCase(),
-        tarif:     form.tarif     ? Number(form.tarif)     : undefined,
-        tarifBPJS: form.tarifBPJS ? Number(form.tarifBPJS) : undefined,
+        tarif:     form.tarif === "" || form.tarif === null || form.tarif === undefined ? undefined : Number(form.tarif),
+        tarifBPJS: form.tarifBPJS === "" || form.tarifBPJS === null || form.tarifBPJS === undefined ? undefined : Number(form.tarifBPJS),
       };
       const r = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       if (!r.ok) { const e = await r.json(); throw new Error(e.error?.formErrors?.[0] ?? e.error ?? "Error"); }
