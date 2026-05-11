@@ -20,10 +20,7 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === "production",
   },
 
-  // Eksperimen: partial prerendering untuk page yang bisa di-cache
-  experimental: {
-    ppr: "incremental",
-  },
+  cacheComponents: true,
 };
 
 export default nextConfig;

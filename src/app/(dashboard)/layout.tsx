@@ -26,8 +26,8 @@ import {
   Bell,
   Search,
   Menu,
-  X,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import type { Role } from "@prisma/client";
 
@@ -173,7 +173,7 @@ export default function DashboardLayout({
       </nav>
 
       {/* User Section */}
-      <div className="p-3 border-t border-sidebar-border">
+      <div className="p-3 border-t border-sidebar-border space-y-1">
         <DropdownMenu>
           <DropdownMenuTrigger
             className={`flex items-center ${collapsed && !isMobile ? "justify-center" : "gap-3"} w-full p-2 rounded-lg hover:bg-sidebar-accent transition-all duration-200`}
@@ -202,16 +202,17 @@ export default function DashboardLayout({
               <User className="mr-2 h-4 w-4" />
               Profil
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:text-destructive"
-              onClick={() => signOut({ callbackUrl: "/login" })}
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Keluar
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* Tombol Logout */}
+        <button
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className={`flex items-center ${collapsed && !isMobile ? "justify-center" : "gap-3"} w-full px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-all duration-200`}
+        >
+          <LogOut className="h-4 w-4 flex-shrink-0" />
+          {(!collapsed || isMobile) && <span>Keluar</span>}
+        </button>
       </div>
     </div>
   );
@@ -280,6 +281,7 @@ export default function DashboardLayout({
               <Bell className="h-4 w-4" />
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
             </Button>
+            <ThemeToggle />
             <div className="hidden lg:flex items-center gap-2 ml-2 pl-2 border-l">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="gradient-primary text-white text-xs font-semibold">
