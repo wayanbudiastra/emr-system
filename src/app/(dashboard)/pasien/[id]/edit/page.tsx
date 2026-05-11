@@ -49,8 +49,8 @@ export default function EditPasienPage({ params }: { params: Promise<{ id: strin
     return (
       <div className="text-center py-20 text-muted-foreground">
         <p>Pasien tidak ditemukan.</p>
-        <Button asChild variant="link" className="mt-2">
-          <Link href="/pasien">Kembali ke daftar</Link>
+        <Button variant="link" className="mt-2" render={<Link href="/pasien" />}>
+          Kembali ke daftar
         </Button>
       </div>
     );
