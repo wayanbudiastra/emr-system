@@ -46,12 +46,16 @@ export const createPeralatanSchema = z.object({
   merk:      z.string().optional(),
   nomorSeri: z.string().optional(),
   deskripsi: z.string().optional(),
+  tarif:     z.number().positive().optional(),
+  tarifBPJS: z.number().positive().optional(),
 });
 
 export const updatePeralatanSchema = z.object({
   nama:              z.string().min(3).optional(),
   merk:              z.string().optional(),
   deskripsi:         z.string().optional(),
+  tarif:             z.number().positive().optional(),
+  tarifBPJS:         z.number().positive().optional(),
   status:            z.enum(["TERSEDIA", "DIGUNAKAN", "MAINTENANCE", "RUSAK"]).optional(),
   lokasiTerakhir:    z.string().optional(),
   tanggalKalibrasi:  z.string().optional(),
