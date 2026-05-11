@@ -85,7 +85,7 @@ export default function PoliPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{poliList.length} poliklinik terdaftar</p>
+        <p className="text-sm text-muted-foreground">{total} poliklinik terdaftar</p>
         <div className="flex gap-2">
           <Button variant="ghost" size="icon" onClick={refresh}><RefreshCw className="h-4 w-4" /></Button>
           <Button onClick={() => setCreateOpen(true)} className="gap-2"><Plus className="h-4 w-4" />Tambah Poli</Button>
