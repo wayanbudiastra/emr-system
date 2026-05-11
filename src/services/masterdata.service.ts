@@ -81,11 +81,16 @@ export const masterdataService = {
   },
 
   async updatePeralatan(id: string, dto: { nama?: string; merk?: string; deskripsi?: string; tarif?: number; tarifBPJS?: number; status?: string; lokasiTerakhir?: string; tanggalKalibrasi?: string }) {
-    const data: Parameters<typeof masterdataRepository.updatePeralatan>[1] = {
-      ...dto,
-      tanggalKalibrasi: dto.tanggalKalibrasi ? new Date(dto.tanggalKalibrasi) : undefined,
-      status: dto.status as Parameters<typeof masterdataRepository.updatePeralatan>[1]["status"],
-    };
+    type UpdateData = Parameters<typeof masterdataRepository.updatePeralatan>[1];
+    const data: UpdateData = {};
+    if (dto.nama            !== undefined) data.nama             = dto.nama;
+    if (dto.merk            !== undefined) data.merk             = dto.merk;
+    if (dto.deskripsi       !== undefined) data.deskripsi        = dto.deskripsi;
+    if (dto.tarif           !== undefined) data.tarif            = dto.tarif;
+    if (dto.tarifBPJS       !== undefined) data.tarifBPJS        = dto.tarifBPJS;
+    if (dto.status          !== undefined) data.status           = dto.status as UpdateData["status"];
+    if (dto.lokasiTerakhir  !== undefined) data.lokasiTerakhir   = dto.lokasiTerakhir;
+    if (dto.tanggalKalibrasi !== undefined) data.tanggalKalibrasi = new Date(dto.tanggalKalibrasi);
     return masterdataRepository.updatePeralatan(id, data);
   },
 
