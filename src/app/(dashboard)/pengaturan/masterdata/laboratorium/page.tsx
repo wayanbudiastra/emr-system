@@ -13,6 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PageControls } from "@/components/ui/page-controls";
 
 type Item = { id: string; kode: string; nama: string; tarif: number; tarifBPJS?: number | null; satuanWaktu?: string | null; isActive: boolean };
 
