@@ -107,7 +107,7 @@ export default function PoliPage() {
             <TableBody>
               {isLoading ? Array.from({ length: 4 }).map((_, i) => (
                 <TableRow key={i}>{Array.from({ length: 5 }).map((_, j) => <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>)}</TableRow>
-              )) : poliList.map(p => (
+              )) : paginated.map(p => (
                 <TableRow key={p.id} className={!p.isActive ? "opacity-50" : ""}>
                   <TableCell>
                     <div className="flex items-center gap-2">
