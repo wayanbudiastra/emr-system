@@ -56,10 +56,8 @@ export default function PasienPage() {
             Kelola pendaftaran dan data demografi pasien
           </p>
         </div>
-        <Button asChild className="gap-2">
-          <Link href="/pasien/tambah">
-            <Plus className="h-4 w-4" /> Daftar Pasien Baru
-          </Link>
+        <Button className="gap-2" render={<Link href="/pasien/tambah" />}>
+          <Plus className="h-4 w-4" /> Daftar Pasien Baru
         </Button>
       </div>
 
