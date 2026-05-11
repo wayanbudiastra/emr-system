@@ -85,20 +85,7 @@ async function main() {
     }
     console.log("✓ Kamar (3)");
 
-    // ── Master Tindakan ────────────────────────────────────
-    for (const t of [
-      { kode: "KST-001", nama: "Konsultasi Umum",     tarif: 50_000,  kategori: "Konsultasi" },
-      { kode: "KST-002", nama: "Konsultasi Spesialis", tarif: 150_000, kategori: "Konsultasi" },
-      { kode: "LAB-001", nama: "Cek Darah Lengkap",    tarif: 120_000, kategori: "Laboratorium" },
-      { kode: "LAB-002", nama: "Urine Lengkap",         tarif: 75_000,  kategori: "Laboratorium" },
-      { kode: "RAD-001", nama: "Rontgen Thorax",        tarif: 200_000, kategori: "Radiologi" },
-      { kode: "TND-001", nama: "Injeksi",               tarif: 30_000,  kategori: "Tindakan" },
-      { kode: "TND-002", nama: "Pemasangan Infus",      tarif: 80_000,  kategori: "Tindakan" },
-      { kode: "TND-003", nama: "Hecting",               tarif: 100_000, kategori: "Tindakan" },
-    ]) {
-      await prisma.masterTindakan.upsert({ where: { kode: t.kode }, update: {}, create: t });
-    }
-    console.log("✓ Master Tindakan (8)");
+    // Master Tindakan lama dihapus — digantikan oleh seedMasterdataV2
 
     // ── Obat ───────────────────────────────────────────────
     for (const o of [
@@ -115,12 +102,101 @@ async function main() {
     }
     console.log("✓ Obat (8)");
 
+    // ── Masterdata V2 ──────────────────────────────────────
+    await seedMasterdataV2(prisma);
+
     console.log("\n✅ Seeding selesai!");
     console.log("📋 Default password semua akun: Admin@1234");
     console.log("⚠️  Segera ganti password setelah login pertama!");
   } finally {
     await prisma.$disconnect();
   }
+}
+
+async function seedMasterdataV2(prisma: Awaited<ReturnType<typeof import("../src/lib/db").createPrismaClient>>) {
+  // Poli
+  const poliData = [
+    { nama: "Poli Umum",      kode: "PU",  lantai: "Lantai 1" },
+    { nama: "Poli Mata",      kode: "PM",  lantai: "Lantai 1" },
+    { nama: "Poli Gigi",      kode: "PG",  lantai: "Lantai 2" },
+    { nama: "Poli Bedah",     kode: "PB",  lantai: "Lantai 2" },
+    { nama: "Poli Anak",      kode: "PA",  lantai: "Lantai 1" },
+    { nama: "Poli Kebidanan", kode: "PKB", lantai: "Lantai 3" },
+  ];
+  const polis = await Promise.all(poliData.map(p =>
+    prisma.poli.upsert({ where: { kode: p.kode }, update: {}, create: p })
+  ));
+  const poliMap = Object.fromEntries(polis.map(p => [p.kode, p.id]));
+  console.log(`✓ Poli V2 (${polis.length})`);
+
+  // Tindakan (Lokal)
+  const tindakanData = [
+    { kode: "T001", nama: "Pemeriksaan Fisik Umum",  tarif: 50000,  poliKodes: ["PU","PA","PKB"] },
+    { kode: "T002", nama: "Pemeriksaan Visus",        tarif: 75000,  poliKodes: ["PM"] },
+    { kode: "T003", nama: "Tonometri",                tarif: 100000, poliKodes: ["PM"] },
+    { kode: "T004", nama: "Ekstraksi Gigi",           tarif: 150000, poliKodes: ["PG"] },
+    { kode: "T005", nama: "Pemasangan Tambal Gigi",   tarif: 200000, poliKodes: ["PG"] },
+    { kode: "T006", nama: "Pemasangan Infus",          tarif: 85000,  poliKodes: ["PU","PB","PA","PKB"] },
+    { kode: "T007", nama: "Jahit Luka",                tarif: 120000, poliKodes: ["PU","PB"] },
+    { kode: "T008", nama: "Sirkumsisi",                tarif: 500000, poliKodes: ["PB"] },
+    { kode: "T009", nama: "USG Obstetri",              tarif: 250000, poliKodes: ["PKB"] },
+    { kode: "T010", nama: "Nebulisasi",                tarif: 60000,  poliKodes: ["PU","PA"] },
+  ];
+  for (const t of tindakanData) {
+    const tindakan = await prisma.masterTindakan.upsert({
+      where: { kode: t.kode }, update: {},
+      create: { kode: t.kode, nama: t.nama, tarif: t.tarif, kategori: "TINDAKAN" },
+    });
+    await prisma.tindakanPoli.createMany({
+      data: t.poliKodes.map(k => ({ masterTindakanId: tindakan.id, poliId: poliMap[k] })),
+      skipDuplicates: true,
+    });
+  }
+  console.log(`✓ Tindakan (${tindakanData.length}) + mapping`);
+
+  // Lab
+  const labData = [
+    { kode: "L001", nama: "Darah Lengkap",                       tarif: 85000,  satuanWaktu: "2 jam" },
+    { kode: "L002", nama: "Urinalisis",                          tarif: 45000,  satuanWaktu: "1 jam" },
+    { kode: "L003", nama: "Gula Darah Sewaktu",                  tarif: 30000,  satuanWaktu: "30 menit" },
+    { kode: "L004", nama: "HbA1C",                               tarif: 120000, satuanWaktu: "3 jam" },
+    { kode: "L005", nama: "Fungsi Ginjal (Ureum/Kreatinin)",      tarif: 95000,  satuanWaktu: "2 jam" },
+    { kode: "L006", nama: "Fungsi Hati (SGOT/SGPT)",             tarif: 95000,  satuanWaktu: "2 jam" },
+    { kode: "L007", nama: "Profil Lipid",                        tarif: 110000, satuanWaktu: "3 jam" },
+    { kode: "L008", nama: "Kultur Darah",                        tarif: 250000, satuanWaktu: "5 hari kerja" },
+  ];
+  await prisma.itemPenunjang.createMany({
+    data: labData.map(l => ({ ...l, kategori: "LAB" as const })),
+    skipDuplicates: true,
+  });
+  console.log(`✓ Lab (${labData.length})`);
+
+  // Radiologi
+  const radData = [
+    { kode: "R001", nama: "Foto Thorax PA",      tarif: 150000,  satuanWaktu: "1 jam" },
+    { kode: "R002", nama: "USG Abdomen",         tarif: 300000,  satuanWaktu: "30 menit" },
+    { kode: "R003", nama: "CT-Scan Kepala",      tarif: 900000,  satuanWaktu: "2 jam" },
+    { kode: "R004", nama: "MRI Lumbal",          tarif: 2500000, satuanWaktu: "2 jam" },
+    { kode: "R005", nama: "EKG 12 Lead",         tarif: 120000,  satuanWaktu: "30 menit" },
+    { kode: "R006", nama: "Foto Panoramik Gigi", tarif: 200000,  satuanWaktu: "30 menit" },
+  ];
+  await prisma.itemPenunjang.createMany({
+    data: radData.map(r => ({ ...r, kategori: "RADIOLOGI" as const })),
+    skipDuplicates: true,
+  });
+  console.log(`✓ Radiologi (${radData.length})`);
+
+  // Peralatan
+  const peralatanData = [
+    { kode: "A001", nama: "Oxymeter",           merk: "Contec",        nomorSeri: "CX8001" },
+    { kode: "A002", nama: "Tensimeter Digital", merk: "Omron",         nomorSeri: "OM7200" },
+    { kode: "A003", nama: "Nebulizer",          merk: "Omron",         nomorSeri: "NEB001" },
+    { kode: "A004", nama: "ECG Monitor 12 Lead",merk: "GE Healthcare", nomorSeri: "GE1200" },
+    { kode: "A005", nama: "Glucometer",         merk: "Accu-Check",    nomorSeri: "AC4500" },
+    { kode: "A006", nama: "Infusion Pump",      merk: "Terumo",        nomorSeri: "TE2200" },
+  ];
+  await prisma.peralatanMedis.createMany({ data: peralatanData, skipDuplicates: true });
+  console.log(`✓ Peralatan (${peralatanData.length})`);
 }
 
 main().catch((e) => {

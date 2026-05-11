@@ -62,6 +62,27 @@ enum MetodePembayaran {
   KARTU_KREDIT
 }
 
+enum KategoriItem {
+  TINDAKAN
+  LAB
+  RADIOLOGI
+  PERALATAN
+}
+
+enum StatusPeralatan {
+  TERSEDIA
+  DIGUNAKAN
+  MAINTENANCE
+  RUSAK
+}
+
+enum StatusPenunjang {
+  DIPESAN
+  DIPROSES
+  SELESAI
+  DIBATALKAN
+}
+
 // ──────────────────────────────────────────
 // USER & AUTENTIKASI
 // ──────────────────────────────────────────
@@ -137,11 +158,16 @@ model Poli {
   id        String    @id @default(cuid())
   nama      String
   kode      String    @unique
+  deskripsi String?
+  lantai    String?
   isActive  Boolean   @default(true)
   createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
-  dokter    Dokter[]
-  kunjungan Kunjungan[]
+  dokter          Dokter[]
+  kunjungan       Kunjungan[]
+  tindakanMapping TindakanPoli[]
+  penggunaanAlat  PenggunaanAlat[]
 
   @@map("poli")
 }
@@ -222,14 +248,15 @@ model Kunjungan {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
-  pasien         Pasien          @relation(fields: [pasienId], references: [id])
-  dokter         Dokter?         @relation(fields: [dokterId], references: [id])
-  poli           Poli?           @relation(fields: [poliId], references: [id])
-  asesmen        AsesmenPerawat?
-  soap           SOAPNote?
-  resep          Resep[]
-  billing        Billing?
-  tindakan       Tindakan[]
+  pasien              Pasien          @relation(fields: [pasienId], references: [id])
+  dokter              Dokter?         @relation(fields: [dokterId], references: [id])
+  poli                Poli?           @relation(fields: [poliId], references: [id])
+  asesmen             AsesmenPerawat?
+  soap                SOAPNote?
+  resep               Resep[]
+  billing             Billing?
+  tindakan            Tindakan[]
+  permintaanPenunjang PermintaanPenunjang[]
 
   @@map("kunjungan")
 }
@@ -366,15 +393,108 @@ model ItemResep {
 // ──────────────────────────────────────────
 
 model MasterTindakan {
-  id       String  @id @default(cuid())
-  kode     String  @unique
-  nama     String
-  tarif    Float
-  kategori String?
+  id          String       @id @default(cuid())
+  kode        String       @unique
+  nama        String
+  deskripsi   String?
+  tarif       Float
+  tarifBPJS   Float?
+  kategori    KategoriItem @default(TINDAKAN)
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime?    @updatedAt
 
-  tindakan Tindakan[]
+  tindakan    Tindakan[]
+  poliMapping TindakanPoli[]
 
   @@map("master_tindakan")
+}
+
+// ──────────────────────────────────────────
+// MASTERDATA V2 — CLINICAL & ASSET
+// ──────────────────────────────────────────
+
+model TindakanPoli {
+  id               String         @id @default(cuid())
+  masterTindakanId String
+  poliId           String
+  createdAt        DateTime       @default(now())
+
+  masterTindakan   MasterTindakan @relation(fields: [masterTindakanId], references: [id], onDelete: Cascade)
+  poli             Poli           @relation(fields: [poliId], references: [id], onDelete: Cascade)
+
+  @@unique([masterTindakanId, poliId])
+  @@map("tindakan_poli")
+}
+
+model ItemPenunjang {
+  id          String       @id @default(cuid())
+  kode        String       @unique
+  nama        String
+  deskripsi   String?
+  kategori    KategoriItem
+  tarif       Float
+  tarifBPJS   Float?
+  satuanWaktu String?
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  permintaan  PermintaanPenunjang[]
+
+  @@map("item_penunjang")
+}
+
+model PermintaanPenunjang {
+  id              String          @id @default(cuid())
+  kunjunganId     String
+  itemPenunjangId String
+  jumlah          Int             @default(1)
+  catatan         String?
+  status          StatusPenunjang @default(DIPESAN)
+  hasilUrl        String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  kunjungan       Kunjungan       @relation(fields: [kunjunganId], references: [id])
+  itemPenunjang   ItemPenunjang   @relation(fields: [itemPenunjangId], references: [id])
+
+  @@map("permintaan_penunjang")
+}
+
+model PeralatanMedis {
+  id                String          @id @default(cuid())
+  kode              String          @unique
+  nama              String
+  merk              String?
+  nomorSeri         String?         @unique
+  deskripsi         String?
+  status            StatusPeralatan @default(TERSEDIA)
+  lokasiTerakhir    String?
+  poliTerakhirId    String?
+  tanggalKalibrasi  DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  riwayatPenggunaan PenggunaanAlat[]
+
+  @@map("peralatan_medis")
+}
+
+model PenggunaanAlat {
+  id           String         @id @default(cuid())
+  peralatanId  String
+  poliId       String
+  kunjunganId  String?
+  dipakaiOleh  String?
+  waktuMulai   DateTime       @default(now())
+  waktuSelesai DateTime?
+  catatan      String?
+
+  peralatan    PeralatanMedis @relation(fields: [peralatanId], references: [id])
+  poli         Poli           @relation(fields: [poliId], references: [id])
+
+  @@map("penggunaan_alat")
 }
 
 model Tindakan {

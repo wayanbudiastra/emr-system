@@ -10,6 +10,9 @@ import {
   Receipt,
   BarChart3,
   Settings,
+  Database,
+  Building2,
+  Cpu,
   type LucideIcon,
 } from "lucide-react";
 
@@ -102,6 +105,30 @@ export const navConfig: NavItem[] = [
         title: "Klinik",
         href: "/pengaturan/klinik",
         icon: Settings,
+        roles: [Role.SUPER_ADMIN],
+      },
+      {
+        title: "Master Poli",
+        href: "/pengaturan/masterdata/poli",
+        icon: Building2,
+        roles: [Role.SUPER_ADMIN],
+      },
+      {
+        title: "Master Tindakan",
+        href: "/pengaturan/masterdata/tindakan",
+        icon: Database,
+        roles: [Role.SUPER_ADMIN],
+      },
+      {
+        title: "Lab & Radiologi",
+        href: "/pengaturan/masterdata/penunjang",
+        icon: FlaskConical,
+        roles: [Role.SUPER_ADMIN],
+      },
+      {
+        title: "Peralatan Medis",
+        href: "/pengaturan/masterdata/peralatan",
+        icon: Cpu,
         roles: [Role.SUPER_ADMIN],
       },
     ],
