@@ -127,12 +127,17 @@ export default function PeralatanPage() {
   const qc = useQueryClient();
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const [editItem, setEditItem] = useState<Peralatan | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const refresh = () => qc.invalidateQueries({ queryKey: ["peralatan"] });
 
-  const { data, isLoading } = useQuery({ queryKey: ["peralatan", statusFilter, search], queryFn: () => fetchPeralatan(statusFilter, search) });
+  useEffect(() => { setPage(1); }, [search, statusFilter]);
+
+  const { data, isLoading } = useQuery({ queryKey: ["peralatan", statusFilter, search, page], queryFn: () => fetchPeralatan(statusFilter, search, page) });
   const items: Peralatan[] = data?.data ?? [];
+  const total              = data?.total ?? 0;
+  const totalPages         = data?.totalPages ?? 1;
 
   return (
     <div className="space-y-4">
