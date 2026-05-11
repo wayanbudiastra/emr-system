@@ -70,8 +70,8 @@ export default function PasienDetailPage({ params }: { params: Promise<{ id: str
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" asChild className="shrink-0">
-            <Link href="/pasien"><ChevronLeft className="h-5 w-5" /></Link>
+          <Button variant="ghost" size="icon" className="shrink-0" render={<Link href="/pasien" />}>
+            <ChevronLeft className="h-5 w-5" />
           </Button>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
