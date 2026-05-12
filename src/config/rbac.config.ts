@@ -85,6 +85,8 @@ export const rolePermissions: Record<string, Permissions> = {
     rawatInap:       ["create", "read", "update"],
     obat:            ["read"],
     "laporan:medis": ["read:own"],
+    "dokter:profil": ["read"],
+    "dokter:jadwal": ["read"],
   },
 
   PERAWAT: {
