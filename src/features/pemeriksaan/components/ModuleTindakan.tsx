@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import {
   Stethoscope, Wrench, Search, Plus, Trash2,
-  ShoppingCart, AlertTriangle, User,
+  ShoppingCart, AlertTriangle,
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input }   from '@/components/ui/input';
