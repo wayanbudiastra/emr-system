@@ -274,7 +274,8 @@ model JadwalPraktek {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
-  dokterPoli   DokterPoli @relation(fields: [dokterPoliId], references: [id], onDelete: Cascade)
+  dokterPoli    DokterPoli    @relation(fields: [dokterPoliId], references: [id], onDelete: Cascade)
+  appointments  Appointment[]
 
   @@map("jadwal_praktek")
 }
