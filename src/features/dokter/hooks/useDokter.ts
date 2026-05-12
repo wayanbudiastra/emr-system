@@ -107,7 +107,7 @@ export function useRemovePoliMapping(dokterProfileId: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
-      toast({ title: 'Mapping poli dihapus' });
+      toast.success('Mapping poli dihapus');
     },
     onError: (e: Error) => toast.error(e.message),
   });
