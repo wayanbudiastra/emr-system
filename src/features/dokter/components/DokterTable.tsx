@@ -84,11 +84,12 @@ export function DokterTable({ data, isLoading }: Props) {
               </Badge>
             </TableCell>
             <TableCell>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href={`/data-dokter/${d.id}`}>
-                  <Eye className="h-4 w-4" />
-                </Link>
-              </Button>
+              <Link
+                href={`/data-dokter/${d.id}`}
+                className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }))}
+              >
+                <Eye className="h-4 w-4" />
+              </Link>
             </TableCell>
           </TableRow>
         ))}
