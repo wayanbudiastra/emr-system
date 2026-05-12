@@ -543,11 +543,41 @@ model Resep {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  kunjungan      Kunjungan      @relation(fields: [kunjunganId], references: [id])
-  dokterProfile  DokterProfile? @relation(fields: [dokterId], references: [id])
-  items          ItemResep[]
+  kunjungan       Kunjungan       @relation(fields: [kunjunganId], references: [id])
+  dokterProfile   DokterProfile?  @relation(fields: [dokterId], references: [id])
+  items           ItemResep[]
+  racikanHeaders  RacikanHeader[]
 
   @@map("resep")
+}
+
+model RacikanHeader {
+  id            String        @id @default(cuid())
+  resepId       String
+  namaRacikan   String
+  metode        MetodeRacikan @default(PUYER)
+  jumlahSediaan Int
+  aturanPakai   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  resep         Resep         @relation(fields: [resepId], references: [id], onDelete: Cascade)
+  bahan         RacikanBahan[]
+
+  @@map("racikan_header")
+}
+
+model RacikanBahan {
+  id              String        @id @default(cuid())
+  racikanHeaderId String
+  obatId          String
+  jumlah          Float
+  satuan          String?
+
+  racikanHeader   RacikanHeader @relation(fields: [racikanHeaderId], references: [id], onDelete: Cascade)
+  obat            Obat          @relation(fields: [obatId], references: [id])
+
+  @@map("racikan_bahan")
 }
 
 model ItemResep {
