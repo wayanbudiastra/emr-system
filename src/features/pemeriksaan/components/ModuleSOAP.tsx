@@ -33,7 +33,7 @@ type SoapData = {
   objektif:  string | null;
   asesmen:   string | null;
   plan:      string | null;
-  icdCodes:  IcdItem[] | null;
+  icdCodes:  unknown;
 };
 
 type TindakanRow = { masterTindakan: { nama: string }; jumlah: number };
