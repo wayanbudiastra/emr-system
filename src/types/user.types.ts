@@ -12,7 +12,7 @@ export interface UserRow {
   isActive: boolean;
   lastLoginAt: Date | null;
   createdAt: Date;
-  dokter: { sip: string | null; spesialisasi: string | null; poliId: string | null } | null;
+  dokterProfile: { noSIP: string | null; spesialisasi: string | null } | null;
 }
 
 export interface CreateUserDTO {
@@ -22,9 +22,8 @@ export interface CreateUserDTO {
   role: Role;
   nip?: string;
   telepon?: string;
-  sip?: string;
+  noSIP?: string;
   spesialisasi?: string;
-  poliId?: string;
 }
 
 export interface UpdateUserDTO {
@@ -34,7 +33,6 @@ export interface UpdateUserDTO {
   nip?: string;
   telepon?: string;
   isActive?: boolean;
-  sip?: string;
+  noSIP?: string;
   spesialisasi?: string;
-  poliId?: string;
 }
