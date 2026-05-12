@@ -1,5 +1,5 @@
 import { dokterRepository } from '@/repositories/dokter.repository';
-import type { DokterProfileValues, JadwalPraktekValues } from '@/features/dokter/schemas/dokter.schema';
+import type { DokterProfileValues, JadwalPraktekValues, UpdateJadwalValues } from '@/features/dokter/schemas/dokter.schema';
 import { getSIPStatus } from '@/features/dokter/utils/sip-status';
 export { getSIPStatus } from '@/features/dokter/utils/sip-status';
 
