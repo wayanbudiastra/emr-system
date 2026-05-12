@@ -35,17 +35,14 @@ export async function PATCH(
       );
     }
 
-    // Update status — panggilAt akan aktif setelah dev server di-restart
-    const updateData: Record<string, unknown> = { status: 'DALAM_PEMERIKSAAN' };
-    try { updateData.panggilAt = new Date(); } catch { /* field belum dikenali */ }
-
     const result = await prisma.kunjungan.update({
       where: { id },
-      data:  { status: 'DALAM_PEMERIKSAAN' },
+      data:  { status: 'DALAM_PEMERIKSAAN', panggilAt: new Date() },
       select: {
         id:           true,
         nomorAntrean: true,
         status:       true,
+        panggilAt:    true,
         pasien: { select: { id: true, nama: true, nomorRM: true } },
       },
     });
