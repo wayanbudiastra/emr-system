@@ -86,7 +86,7 @@ export function useAddPoliMapping(dokterProfileId: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
-      toast({ title: 'Poli berhasil ditambahkan' });
+      toast.success('Poli berhasil ditambahkan');
     },
     onError: (e: Error) => toast.error(e.message),
   });
