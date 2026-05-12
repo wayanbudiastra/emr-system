@@ -75,6 +75,13 @@ enum StatusResep {
   DIPROSES
   SIAP
   DIAMBIL
+  DIBATALKAN
+}
+
+enum MetodeRacikan {
+  PUYER
+  KAPSUL
+  SALEP
 }
 
 enum StatusBilling {
