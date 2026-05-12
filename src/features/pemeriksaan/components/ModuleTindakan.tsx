@@ -513,21 +513,12 @@ export function ModuleTindakan({
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
                     </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="space-y-1">
-                        <Label className="text-xs">Jumlah</Label>
-                        <Input type="number" min={1} max={99} className="h-8 text-xs"
-                          value={c.jumlah}
-                          onChange={e => updateTindakanCart(c.item.id, 'jumlah', parseInt(e.target.value) || 1)}
-                        />
-                      </div>
-                      <div className="col-span-2 space-y-1">
-                        <Label className="text-xs">Pelaksana</Label>
-                        <Input className="h-8 text-xs" placeholder="dr. / Ns. ..."
-                          value={c.pelaksana}
-                          onChange={e => updateTindakanCart(c.item.id, 'pelaksana', e.target.value)}
-                        />
-                      </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Jumlah</Label>
+                      <Input type="number" min={1} max={99} className="h-8 text-xs w-24"
+                        value={c.jumlah}
+                        onChange={e => updateTindakanCart(c.item.id, 'jumlah', parseInt(e.target.value) || 1)}
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label className="text-xs">Catatan</Label>
