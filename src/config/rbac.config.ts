@@ -127,7 +127,7 @@ export const routePermissions: Record<string, Role[]> = {
   "/laporan/keuangan":        [Role.SUPER_ADMIN, Role.KASIR],
   "/laporan/medis":           [Role.SUPER_ADMIN, Role.DOKTER],
   "/laporan/farmasi":         [Role.SUPER_ADMIN, Role.APOTEKER],
-  "/data-dokter":             [Role.SUPER_ADMIN],
+  "/pengaturan/data-dokter":  [Role.SUPER_ADMIN],
 };
 
 export function hasRouteAccess(role: Role, path: string): boolean {
