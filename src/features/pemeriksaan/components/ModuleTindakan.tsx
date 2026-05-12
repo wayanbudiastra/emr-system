@@ -270,35 +270,30 @@ function MonitoringTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {tindakanList.map(t => {
-          const pelaksana = t.catatan?.match(/^Pelaksana: (.+)$/m)?.[1] ?? '—';
-          const catatan   = t.catatan?.replace(/^Pelaksana: .+\n?/, '').trim();
-          return (
-            <TableRow key={t.id}>
-              <TableCell className="text-xs tabular-nums text-muted-foreground">
-                {format(new Date(t.createdAt), 'HH:mm')}
-              </TableCell>
-              <TableCell>
-                <div className="text-sm font-medium">{t.masterTindakan.nama}</div>
-                {catatan && <div className="text-xs text-muted-foreground">{catatan}</div>}
-              </TableCell>
-              <TableCell>
-                <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">Tindakan</Badge>
-              </TableCell>
-              <TableCell className="text-sm">{pelaksana}</TableCell>
-              <TableCell className="text-sm tabular-nums">{t.jumlah}</TableCell>
-              <TableCell className="text-xs text-muted-foreground">
-                {formatRupiah(t.masterTindakan.tarif * t.jumlah)}
-              </TableCell>
-              <TableCell>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive"
-                  disabled={isPending} onClick={() => onDeleteTindakan(t.id)}>
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          );
-        })}
+        {tindakanList.map(t => (
+          <TableRow key={t.id}>
+            <TableCell className="text-xs tabular-nums text-muted-foreground">
+              {format(new Date(t.createdAt), 'HH:mm')}
+            </TableCell>
+            <TableCell>
+              <div className="text-sm font-medium">{t.masterTindakan.nama}</div>
+              {t.catatan && <div className="text-xs text-muted-foreground">{t.catatan}</div>}
+            </TableCell>
+            <TableCell>
+              <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">Tindakan</Badge>
+            </TableCell>
+            <TableCell className="text-sm tabular-nums">{t.jumlah}</TableCell>
+            <TableCell className="text-xs text-muted-foreground">
+              {formatRupiah(t.masterTindakan.tarif * t.jumlah)}
+            </TableCell>
+            <TableCell>
+              <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive"
+                disabled={isPending} onClick={() => onDeleteTindakan(t.id)}>
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
         {alatList.map(a => {
           const qtyMatch = a.catatan?.match(/Qty: (\d+)/);
           const qty      = qtyMatch ? Number(qtyMatch[1]) : 1;
