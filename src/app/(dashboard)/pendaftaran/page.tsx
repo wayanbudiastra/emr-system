@@ -62,6 +62,32 @@ const STATUS_LABELS: Record<string, string> = {
   DIBATALKAN:        'Batal',
 };
 
+const APPT_STATUS_COLORS: Record<string, string> = {
+  BOOKED:     'bg-blue-100 text-blue-800',
+  CHECKED_IN: 'bg-green-100 text-green-800',
+  CANCELLED:  'bg-red-100 text-red-800',
+};
+const APPT_STATUS_LABELS: Record<string, string> = {
+  BOOKED:     'Terdaftar',
+  CHECKED_IN: 'Check-in',
+  CANCELLED:  'Batal',
+};
+
+type AppointmentRow = {
+  id:             string;
+  kodeBooking:    string;
+  status:         string;
+  penjamin:       string;
+  keluhan:        string | null;
+  catatan:        string | null;
+  tanggalPraktek: string;
+  jadwalPraktekId: string;
+  namaPasien:     string | null;
+  pasien:         { id: string; nomorRM: string; nama: string } | null;
+  dokterProfile:  { id: string; spesialisasi: string | null; user: { nama: string } };
+  jadwalPraktek:  { id: string; jamMulai: string; jamSelesai: string };
+};
+
 type JadwalItem = {
   id: string;
   jamMulai: string;
