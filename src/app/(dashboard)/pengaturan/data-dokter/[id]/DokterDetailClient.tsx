@@ -1,8 +1,10 @@
 'use client';
 
+import { useEffect }      from 'react';
 import Link               from 'next/link';
 import { useQuery }       from '@tanstack/react-query';
 import { ArrowLeft, UserRoundCheck } from 'lucide-react';
+import { useBreadcrumb }  from '@/contexts/breadcrumb';
 import { buttonVariants } from '@/components/ui/button';
 import { cn }             from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
