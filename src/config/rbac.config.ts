@@ -21,7 +21,11 @@ export type Resource =
   | "laporan:farmasi"
   | "masterdata"
   | "pengaturan"
-  | "auditLog";
+  | "auditLog"
+  | "dokter:profil"
+  | "dokter:mapping"
+  | "dokter:fee"
+  | "dokter:jadwal";
 
 export type Permissions = Partial<Record<Resource, Action[]>>;
 
