@@ -240,7 +240,7 @@ export default function PemeriksaanPage() {
           <div>
             <h1 className="text-2xl font-bold">Pemeriksaan</h1>
             <p className="text-sm text-muted-foreground">
-              {format(new Date(), 'EEEE, dd MMMM yyyy', { locale: idLocale })}
+              {format(now, 'EEEE, dd MMMM yyyy', { locale: idLocale })}
             </p>
           </div>
         </div>
