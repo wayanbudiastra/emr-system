@@ -70,6 +70,8 @@ export const rolePermissions: Record<string, Permissions> = {
     billing:            ["create", "read", "update"],
     pembayaran:         ["create", "read"],
     "laporan:keuangan": ["read"],
+    "dokter:profil":    ["read"],
+    "dokter:fee":       ["read"],
   },
 
   DOKTER: {
