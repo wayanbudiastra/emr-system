@@ -394,10 +394,9 @@ export function ModuleTindakan({
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify({
-            peralatanId:  c.item.id,
-            jumlah:       c.jumlah,
-            dipakaiOleh:  c.dipakaiOleh || null,
-            catatan:      c.catatan     || null,
+            peralatanId: c.item.id,
+            jumlah:      c.jumlah,
+            catatan:     c.catatan || null,
           }),
         });
         const body = await res.json().catch(() => ({}));
