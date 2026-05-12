@@ -527,7 +527,12 @@ export function PemeriksaanDetailClient({ id }: { id: string }) {
             )}
             {activeModule === 'soap'       && <ModuleSOAP soap={kunjungan.soap} />}
             {activeModule === 'penunjang'  && <ModulePenunjang kunjunganId={kunjungan.id} />}
-            {activeModule === 'tindakan'   && <ComingSoon label="Procedure & Equipment" />}
+            {activeModule === 'tindakan'   && (
+              <ModuleTindakan
+                kunjunganId={kunjungan.id}
+                poliId={kunjungan.poli?.id ?? null}
+              />
+            )}
             {activeModule === 'resep'      && <ComingSoon label="Medication" />}
           </CardContent>
         </Card>
