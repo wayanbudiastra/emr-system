@@ -93,16 +93,15 @@ export const dokterService = {
     return dokterRepository.createJadwal(data);
   },
 
-  async updateJadwal(id: string, data: Partial<JadwalPraktekValues>) {
-    if (data.jamMulai || data.jamSelesai || data.hari || data.dokterPoliId) {
-      const existing = await dokterRepository.getJadwalByDokterPoli(data.dokterPoliId ?? '');
-      const current  = existing.find(j => j.id === id);
-      if (current) {
+  async updateJadwal(id: string, data: UpdateJadwalValues) {
+    if (data.jamMulai || data.jamSelesai || data.hari) {
+      const currentJadwal = await dokterRepository.getJadwalById(id);
+      if (currentJadwal) {
         const overlap = await dokterRepository.checkJadwalOverlap({
-          dokterPoliId: current.dokterPoliId,
-          hari:         (data.hari ?? current.hari) as string,
-          jamMulai:     data.jamMulai   ?? current.jamMulai,
-          jamSelesai:   data.jamSelesai ?? current.jamSelesai,
+          dokterPoliId: currentJadwal.dokterPoliId,
+          hari:         (data.hari ?? currentJadwal.hari) as string,
+          jamMulai:     data.jamMulai   ?? currentJadwal.jamMulai,
+          jamSelesai:   data.jamSelesai ?? currentJadwal.jamSelesai,
           excludeId:    id,
         });
         if (overlap) throw new Error('Jadwal bertabrakan dengan jadwal lain di hari yang sama.');
