@@ -444,6 +444,94 @@ function AppointmentFormDialog({ jadwal, tanggal, onClose }: { jadwal: JadwalIte
   );
 }
 
+// ── Edit Appointment Dialog ───────────────────────────────────
+function EditAppointmentDialog({
+  appointment, tanggal, onClose,
+}: { appointment: AppointmentRow; tanggal: string; onClose: () => void }) {
+  const { mutate: update, isPending } = useUpdateAppointment();
+  const { data: jadwalList } = useJadwalTersedia({ tanggal });
+  const jadwal: JadwalItem[] = jadwalList ?? [];
+
+  const [penjamin,   setPenjamin]   = useState(appointment.penjamin);
+  const [keluhan,    setKeluhan]    = useState(appointment.keluhan ?? '');
+  const [catatan,    setCatatan]    = useState(appointment.catatan ?? '');
+  const [jadwalId,   setJadwalId]   = useState(appointment.jadwalPraktekId);
+
+  const handleSave = () => {
+    update({
+      id:   appointment.id,
+      data: {
+        penjamin:        penjamin,
+        keluhan:         keluhan || null,
+        catatan:         catatan || null,
+        jadwalPraktekId: jadwalId !== appointment.jadwalPraktekId ? jadwalId : undefined,
+      },
+    }, { onSuccess: onClose });
+  };
+
+  return (
+    <Dialog open onOpenChange={o => !o && onClose()}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Edit Appointment</DialogTitle>
+          <p className="text-sm text-muted-foreground font-mono">{appointment.kodeBooking}</p>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="rounded-lg bg-muted/50 px-3 py-2 text-sm space-y-1">
+            <p><span className="text-muted-foreground">Pasien:</span> {appointment.pasien?.nama ?? appointment.namaPasien}</p>
+            <p><span className="text-muted-foreground">Dokter:</span> dr. {appointment.dokterProfile.user.nama}</p>
+          </div>
+
+          <div className="space-y-1">
+            <Label>Jadwal Praktek</Label>
+            <Select value={jadwalId} onValueChange={v => setJadwalId(v ?? jadwalId)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Pilih jadwal" />
+              </SelectTrigger>
+              <SelectContent>
+                {jadwal.map(j => (
+                  <SelectItem key={j.id} value={j.id}>
+                    {j.jamMulai}–{j.jamSelesai} · {j.dokterPoli.poli.nama}
+                    {j.tersedia ? ` (sisa ${j.sisaKuota})` : ' (Penuh)'}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1">
+            <Label>Penjamin</Label>
+            <Select value={penjamin} onValueChange={v => setPenjamin(v ?? penjamin)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {PENJAMIN_OPTIONS.map(p => <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1">
+            <Label>Keluhan</Label>
+            <Input placeholder="Keluhan utama" value={keluhan} onChange={e => setKeluhan(e.target.value)} />
+          </div>
+
+          <div className="space-y-1">
+            <Label>Catatan</Label>
+            <Input placeholder="Catatan tambahan (opsional)" value={catatan} onChange={e => setCatatan(e.target.value)} />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose}>Batal</Button>
+          <Button onClick={handleSave} disabled={isPending}>
+            {isPending ? 'Menyimpan...' : 'Simpan Perubahan'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // ── Tab 2: Pendaftaran ────────────────────────────────────────
 function TabPendaftaran() {
   const [mode, setMode] = useState<'booking' | 'walkin'>('booking');
