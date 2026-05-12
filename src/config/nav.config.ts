@@ -112,13 +112,13 @@ export const navConfig: NavItem[] = [
         icon: Activity,
         roles: [Role.SUPER_ADMIN],
       },
+      {
+        title: "Data Dokter",
+        href: "/pengaturan/data-dokter",
+        icon: UserRoundCheck,
+        roles: [Role.SUPER_ADMIN],
+      },
     ],
-  },
-  {
-    title: "Data Dokter",
-    href: "/data-dokter",
-    icon: UserRoundCheck,
-    roles: [Role.SUPER_ADMIN],
   },
 ];
 
