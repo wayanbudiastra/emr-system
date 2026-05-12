@@ -291,6 +291,7 @@ export default function DashboardLayout({
   );
 
   return (
+    <BreadcrumbProvider>
     <div className="flex h-screen overflow-hidden bg-background">
       {/* Desktop Sidebar */}
       <aside
