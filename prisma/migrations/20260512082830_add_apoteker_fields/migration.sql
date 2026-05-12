@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "obat" ADD COLUMN     "barcode" TEXT,
+ADD COLUMN     "hargaBPJS" DOUBLE PRECISION,
+ADD COLUMN     "isPaten" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "jenisBarang" TEXT NOT NULL DEFAULT 'OBAT',
+ADD COLUMN     "maxStock" INTEGER,
+ADD COLUMN     "minStock" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "satuanBesar" TEXT;
