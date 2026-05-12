@@ -23,7 +23,7 @@ export function DokterProfilForm({ userId, defaultValues }: Props) {
   const { mutate: save, isPending } = useSaveProfilDokter(userId);
 
   const form = useForm<DokterProfileFormValues>({
-    resolver: zodResolver(dokterProfileSchema),
+    resolver: zodResolver(dokterProfileSchema) as never,
     defaultValues: {
       nik:           defaultValues?.nik          ?? '',
       noSIP:         defaultValues?.noSIP         ?? '',
