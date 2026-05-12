@@ -145,6 +145,11 @@ export const dokterRepository = {
     );
   },
 
+  async getJadwalById(id: string) {
+    const prisma = await getPrisma();
+    return prisma.jadwalPraktek.findUnique({ where: { id } });
+  },
+
   async getJadwalByDokterPoli(dokterPoliId: string) {
     const prisma = await getPrisma();
     return prisma.jadwalPraktek.findMany({
