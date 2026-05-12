@@ -21,6 +21,7 @@ import { useEffect } from 'react';
 import { ModulePenunjang } from '@/features/pemeriksaan/components/ModulePenunjang';
 import { ModuleTindakan }  from '@/features/pemeriksaan/components/ModuleTindakan';
 import { ModuleSOAP }      from '@/features/pemeriksaan/components/ModuleSOAP';
+import { ModuleResep }     from '@/features/pemeriksaan/components/ModuleResep';
 
 // ── Types ──────────────────────────────────────────────────────
 type Kunjungan = {
