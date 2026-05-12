@@ -65,7 +65,7 @@ export function useSaveProfilDokter(userId: string) {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(userId) });
       toast.success('Profil dokter berhasil disimpan');
     },
-    onError: (e: Error) => toast({ title: 'Gagal', description: e.message, variant: 'destructive' }),
+    onError: (e: Error) => toast.error(e.message),
   });
 }
 
@@ -88,7 +88,7 @@ export function useAddPoliMapping(dokterProfileId: string) {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
       toast({ title: 'Poli berhasil ditambahkan' });
     },
-    onError: (e: Error) => toast({ title: 'Gagal', description: e.message, variant: 'destructive' }),
+    onError: (e: Error) => toast.error(e.message),
   });
 }
 
@@ -109,7 +109,7 @@ export function useRemovePoliMapping(dokterProfileId: string) {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
       toast({ title: 'Mapping poli dihapus' });
     },
-    onError: (e: Error) => toast({ title: 'Gagal', description: e.message, variant: 'destructive' }),
+    onError: (e: Error) => toast.error(e.message),
   });
 }
 
@@ -133,7 +133,7 @@ export function useSaveSharingFee(dokterProfileId: string) {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
       toast({ title: 'Sharing fee berhasil disimpan' });
     },
-    onError: (e: Error) => toast({ title: 'Gagal', description: e.message, variant: 'destructive' }),
+    onError: (e: Error) => toast.error(e.message),
   });
 }
 
@@ -156,7 +156,7 @@ export function useCreateJadwal(dokterProfileId: string) {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
       toast({ title: 'Jadwal praktek berhasil ditambahkan' });
     },
-    onError: (e: Error) => toast({ title: 'Gagal', description: e.message, variant: 'destructive' }),
+    onError: (e: Error) => toast.error(e.message),
   });
 }
 
@@ -175,7 +175,7 @@ export function useToggleJadwal(dokterProfileId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
     },
-    onError: (e: Error) => toast({ title: 'Gagal', description: e.message, variant: 'destructive' }),
+    onError: (e: Error) => toast.error(e.message),
   });
 }
 
@@ -193,6 +193,6 @@ export function useDeleteJadwal(dokterProfileId: string) {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
       toast({ title: 'Jadwal berhasil dihapus' });
     },
-    onError: (e: Error) => toast({ title: 'Gagal', description: e.message, variant: 'destructive' }),
+    onError: (e: Error) => toast.error(e.message),
   });
 }
