@@ -274,6 +274,11 @@ function TabAppointment({ onRegistrasi }: { onRegistrasi: (kode: string) => void
                       <TableCell>
                         {a.status === 'BOOKED' && (
                           <div className="flex gap-1">
+                            <Button size="sm" className="h-7 text-xs px-2"
+                              title="Lanjut ke proses registrasi"
+                              onClick={() => onRegistrasi(a.kodeBooking)}>
+                              <Ticket className="h-3 w-3 mr-1" /> Daftarkan
+                            </Button>
                             <Button variant="ghost" size="icon" className="h-7 w-7" title="Edit" onClick={() => setEditAppt(a)}>
                               <Pencil className="h-3.5 w-3.5" />
                             </Button>
