@@ -70,7 +70,7 @@ export const navConfig: NavItem[] = [
         roles: [Role.SUPER_ADMIN, Role.APOTEKER, Role.DOKTER],
       },
       {
-        title: "Stok Obat",
+        title: "Master Farmasi",
         href: "/farmasi/stok-obat",
         icon: FlaskConical,
         roles: [Role.SUPER_ADMIN, Role.APOTEKER],
