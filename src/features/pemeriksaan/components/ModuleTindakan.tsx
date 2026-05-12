@@ -369,9 +369,8 @@ export function ModuleTindakan({
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify({
             masterTindakanId: c.item.id,
-            jumlah:    c.jumlah,
-            pelaksana: c.pelaksana || null,
-            catatan:   c.catatan   || null,
+            jumlah:  c.jumlah,
+            catatan: c.catatan || null,
           }),
         });
         const body = await res.json().catch(() => ({}));
