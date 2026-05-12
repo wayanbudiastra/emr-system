@@ -154,7 +154,7 @@ export function useCreateJadwal(dokterProfileId: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
-      toast({ title: 'Jadwal praktek berhasil ditambahkan' });
+      toast.success('Jadwal praktek berhasil ditambahkan');
     },
     onError: (e: Error) => toast.error(e.message),
   });
