@@ -22,6 +22,17 @@ interface Props { id: string }
 
 export function DokterDetailClient({ id }: Props) {
   const { data: dokter, isLoading } = useDokterDetail(id);
+  const { setSegments } = useBreadcrumb();
+
+  useEffect(() => {
+    if (dokter?.user?.nama) {
+      setSegments([
+        { label: 'Data Dokter', href: '/pengaturan/data-dokter' },
+        { label: dokter.user.nama },
+      ]);
+    }
+    return () => setSegments([]);
+  }, [dokter?.user?.nama, setSegments]);
 
   const { data: allPoli } = useQuery({
     queryKey: ['poli-list'],
