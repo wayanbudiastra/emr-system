@@ -31,7 +31,10 @@ export async function GET(req: NextRequest) {
 
   const where = {
     tanggal: { gte: start, lt: end },
-    status:  status ? status : { in: ['MENUNGGU', 'DALAM_PEMERIKSAAN'] as const },
+    ...(status
+      ? { status }
+      : { status: { in: ['MENUNGGU', 'DALAM_PEMERIKSAAN'] as ('MENUNGGU' | 'DALAM_PEMERIKSAAN')[] } }
+    ),
   };
 
   const data = await prisma.kunjungan.findMany({
