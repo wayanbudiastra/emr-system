@@ -46,7 +46,7 @@ const ROUTE_LABELS: Record<string, string> = {
   laboratorium: "Laboratorium",
   radiologi:    "Radiologi",
   pasien:       "Pasien",
-  pendaftaran:  "Pendaftaran",
+  pendaftaran:  "Pendaftaran Pasien",
   pemeriksaan:  "Pemeriksaan",
   "rawat-inap": "Rawat Inap",
   farmasi:      "Farmasi",
