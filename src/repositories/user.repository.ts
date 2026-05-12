@@ -73,14 +73,14 @@ export const userRepository = {
 
   async update(id: string, data: UpdateUserInput) {
     const prisma = await getPrisma();
-    const { sip, spesialisasi, poliId, ...userFields } = data;
+    const { noSIP, spesialisasi, ...userFields } = data;
     return prisma.user.update({
       where: { id },
       data: {
         ...userFields,
         role: userFields.role as Role | undefined,
-        ...(sip !== undefined || spesialisasi !== undefined || poliId !== undefined ? {
-          dokter: { upsert: { create: { sip, spesialisasi, poliId }, update: { sip, spesialisasi, poliId } } },
+        ...(noSIP !== undefined || spesialisasi !== undefined ? {
+          dokterProfile: { upsert: { create: { noSIP, spesialisasi }, update: { noSIP, spesialisasi } } },
         } : {}),
       },
     });
