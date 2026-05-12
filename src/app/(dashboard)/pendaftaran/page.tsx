@@ -909,6 +909,14 @@ function TabListPendaftaran() {
 
 // ── Main Page ─────────────────────────────────────────────────
 export default function PendaftaranPage() {
+  const [activeTab,     setActiveTab]     = useState('list');
+  const [prefilledKode, setPrefilledKode] = useState('');
+
+  const handleRegistrasi = (kodeBooking: string) => {
+    setPrefilledKode(kodeBooking);
+    setActiveTab('pendaftaran');
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -919,15 +927,19 @@ export default function PendaftaranPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="list">
+      <Tabs value={activeTab} onValueChange={v => { setActiveTab(v); if (v !== 'pendaftaran') setPrefilledKode(''); }}>
         <TabsList className="grid grid-cols-3 w-full max-w-lg">
           <TabsTrigger value="appointment"><Calendar className="h-4 w-4 mr-1.5" />Appointment</TabsTrigger>
           <TabsTrigger value="pendaftaran"><UserPlus className="h-4 w-4 mr-1.5" />Pendaftaran</TabsTrigger>
           <TabsTrigger value="list"><List className="h-4 w-4 mr-1.5" />List</TabsTrigger>
         </TabsList>
-        <TabsContent value="appointment" className="mt-4"><TabAppointment /></TabsContent>
-        <TabsContent value="pendaftaran" className="mt-4"><TabPendaftaran /></TabsContent>
-        <TabsContent value="list"        className="mt-4"><TabListPendaftaran /></TabsContent>
+        <TabsContent value="appointment" className="mt-4">
+          <TabAppointment onRegistrasi={handleRegistrasi} />
+        </TabsContent>
+        <TabsContent value="pendaftaran" className="mt-4">
+          <TabPendaftaran initialKode={prefilledKode} />
+        </TabsContent>
+        <TabsContent value="list" className="mt-4"><TabListPendaftaran /></TabsContent>
       </Tabs>
     </div>
   );
