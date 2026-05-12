@@ -81,6 +81,38 @@ export function useListPendaftaran(params: { tanggal: string; q?: string; page?:
   });
 }
 
+// ── Update Appointment ────────────────────────────────────────
+export function useUpdateAppointment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }: {
+      id: string;
+      data: {
+        penjamin?:        string;
+        keluhan?:         string | null;
+        catatan?:         string | null;
+        jadwalPraktekId?: string;
+        tanggalPraktek?:  string;
+      };
+    }) => {
+      const res = await fetch(`/api/appointment/${id}`, {
+        method:  'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(data),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error ?? 'Gagal memperbarui appointment');
+      return body;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['appointments'] });
+      qc.invalidateQueries({ queryKey: ['jadwal-tersedia'] });
+      toast.success('Appointment berhasil diperbarui');
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
 // ── Mutations ─────────────────────────────────────────────────
 export function useCreateAppointment() {
   const qc = useQueryClient();
