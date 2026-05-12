@@ -36,7 +36,7 @@ export async function getKunjunganList(
       skip,
       take: limit,
       orderBy: { createdAt: "asc" },
-      include: { pasien: true, dokter: { include: { user: true } }, poli: true },
+      include: { pasien: true, dokterProfile: { include: { user: true } }, poli: true },
     }),
     prisma.kunjungan.count({ where }),
   ]);
