@@ -361,7 +361,7 @@ model Kunjungan {
   updatedAt      DateTime        @updatedAt
 
   pasien              Pasien          @relation(fields: [pasienId], references: [id])
-  dokter              Dokter?         @relation(fields: [dokterId], references: [id])
+  dokterProfile       DokterProfile?  @relation(fields: [dokterId], references: [id])
   poli                Poli?           @relation(fields: [poliId], references: [id])
   asesmen             AsesmenPerawat?
   soap                SOAPNote?
