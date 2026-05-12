@@ -204,14 +204,19 @@ export default function PemeriksaanPage() {
 
   const { mutate: panggil, isPending: panggilPending } = useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/api/kunjungan/${id}/panggil`, { method: 'PATCH' });
-      const body = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(body.error ?? 'Gagal memanggil pasien');
+      const res  = await fetch(`/api/kunjungan/${id}/panggil`, { method: 'PATCH' });
+      const body: Record<string, unknown> = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(
+          typeof body.error === 'string' ? body.error : `Error ${res.status}: Gagal memanggil pasien`
+        );
+      }
       return body;
     },
-    onSuccess: (data: KunjunganItem) => {
+    onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ['pemeriksaan-list'] });
-      toast.success(`Pasien ${data.pasien?.nama} dipanggil`);
+      const nama = (data as { pasien?: { nama?: string } })?.pasien?.nama ?? 'Pasien';
+      toast.success(`${nama} berhasil dipanggil`);
     },
     onError: (e: Error) => toast.error(e.message),
   });
