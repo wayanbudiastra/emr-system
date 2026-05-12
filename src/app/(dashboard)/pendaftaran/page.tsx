@@ -541,8 +541,8 @@ function EditAppointmentDialog({
 }
 
 // ── Tab 2: Pendaftaran ────────────────────────────────────────
-function TabPendaftaran() {
-  const [mode, setMode] = useState<'booking' | 'walkin'>('booking');
+function TabPendaftaran({ initialKode }: { initialKode?: string }) {
+  const [mode, setMode] = useState<'booking' | 'walkin'>(initialKode ? 'booking' : 'booking');
   return (
     <div className="space-y-4">
       <div className="flex gap-2">
@@ -553,7 +553,7 @@ function TabPendaftaran() {
           <UserPlus className="h-4 w-4 mr-2" /> Walk-in Langsung
         </Button>
       </div>
-      {mode === 'booking' ? <CheckinForm /> : <WalkinForm />}
+      {mode === 'booking' ? <CheckinForm initialKode={initialKode} /> : <WalkinForm />}
     </div>
   );
 }
