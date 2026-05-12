@@ -131,7 +131,7 @@ export function useSaveSharingFee(dokterProfileId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: dokterKeys.fee(dokterProfileId) });
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
-      toast({ title: 'Sharing fee berhasil disimpan' });
+      toast.success('Sharing fee berhasil disimpan');
     },
     onError: (e: Error) => toast.error(e.message),
   });
