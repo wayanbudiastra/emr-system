@@ -71,12 +71,6 @@ export async function PATCH(
 
     const isBPJS  = resep.kunjungan.penjamin === 'BPJS';
 
-    // Calculate total harga resep
-    const totalObat = resep.items.reduce((sum, item) => {
-      const harga = isBPJS && item.obat ? 0 : 0; // placeholder — harga dari item.obat
-      return sum;
-    }, 0);
-
     // Collect all stock deductions
     const stokUpdates: Array<{ id: string; jumlah: number }> = [];
     for (const item of resep.items) {
