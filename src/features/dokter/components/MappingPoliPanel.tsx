@@ -62,7 +62,7 @@ export function MappingPoliPanel({ dokterProfileId, mappings, allPoli }: Props) 
         <div>
           <h3 className="text-sm font-medium mb-3">Tambah Mapping Poli</h3>
           <div className="flex gap-2">
-            <Select value={selectedPoli} onValueChange={setSelectedPoli}>
+            <Select value={selectedPoli} onValueChange={(v) => setSelectedPoli(v ?? '')}>
               <SelectTrigger className="w-64">
                 <SelectValue placeholder="— Pilih Poli —" />
               </SelectTrigger>
