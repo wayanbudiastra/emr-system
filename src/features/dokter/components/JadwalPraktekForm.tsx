@@ -2,7 +2,11 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { jadwalPraktekSchema, type JadwalPraktekValues } from '../schemas/dokter.schema';
+import { z } from 'zod';
+import { jadwalPraktekSchema } from '../schemas/dokter.schema';
+
+type JadwalFormInput = z.input<typeof jadwalPraktekSchema>;
+type JadwalFormOutput = z.output<typeof jadwalPraktekSchema>;
 import {
   Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 } from '@/components/ui/form';
