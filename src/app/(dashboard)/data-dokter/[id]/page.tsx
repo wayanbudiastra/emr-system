@@ -66,9 +66,9 @@ export default function DokterDetailPage({ params }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/data-dokter"><ArrowLeft className="h-4 w-4" /></Link>
-        </Button>
+        <Link href="/data-dokter" className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }))}>
+          <ArrowLeft className="h-4 w-4" />
+        </Link>
         <UserRoundCheck className="h-5 w-5 text-primary" />
         <div>
           <h1 className="text-xl font-bold">{dokter.user.nama}</h1>
