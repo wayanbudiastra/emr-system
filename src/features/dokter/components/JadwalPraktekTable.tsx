@@ -66,7 +66,7 @@ export function JadwalPraktekTable({ dokterProfileId, poliMappings }: Props) {
         </div>
       )}
 
-      <Accordion openMultiple defaultValue={aktifMappings.map(m => m.id)}>
+      <Accordion openMultiple>
         {aktifMappings.map(mapping => (
           <AccordionItem key={mapping.id} value={mapping.id}>
             <AccordionTrigger className="text-sm font-medium">
