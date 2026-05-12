@@ -528,7 +528,8 @@ model Obat {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  itemResep   ItemResep[]
+  itemResep    ItemResep[]
+  racikanBahan RacikanBahan[]
 
   @@map("obat")
 }
