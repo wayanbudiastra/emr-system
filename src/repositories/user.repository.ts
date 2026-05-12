@@ -6,7 +6,7 @@ const userSelect = {
   id: true, nama: true, email: true, role: true,
   nip: true, telepon: true, isActive: true,
   lastLoginAt: true, createdAt: true,
-  dokter: { select: { sip: true, spesialisasi: true, poliId: true } },
+  dokterProfile: { select: { noSIP: true, spesialisasi: true } },
 } as const;
 
 export const userRepository = {
