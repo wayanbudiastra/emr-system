@@ -4,9 +4,6 @@ import { useState }  from 'react';
 import { Badge }     from '@/components/ui/badge';
 import { Button }    from '@/components/ui/button';
 import { Switch }    from '@/components/ui/switch';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const AccordionMulti = Accordion as any;
 import { Trash2, CalendarPlus } from 'lucide-react';
 import { useToggleJadwal, useDeleteJadwal } from '../hooks/useDokter';
 import { JadwalPraktekForm } from './JadwalPraktekForm';
@@ -49,7 +46,7 @@ export function JadwalPraktekTable({ dokterProfileId, poliMappings }: Props) {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <p className="text-sm text-muted-foreground">
-          Jadwal per poli, diurutkan hari & jam mulai.
+          Jadwal per poli, diurutkan hari &amp; jam mulai.
         </p>
         <Button size="sm" onClick={() => setShowForm(v => !v)}>
           <CalendarPlus className="h-4 w-4 mr-2" />
@@ -68,62 +65,77 @@ export function JadwalPraktekTable({ dokterProfileId, poliMappings }: Props) {
         </div>
       )}
 
-      <AccordionMulti openMultiple>
-        {aktifMappings.map(mapping => (
-          <AccordionItem key={mapping.id} value={mapping.id}>
-            <AccordionTrigger className="text-sm font-medium">
-              [{mapping.poli.kode}] {mapping.poli.nama}
-              <Badge variant="secondary" className="ml-2 text-xs">
-                {mapping.jadwalPraktek.length} jadwal
-              </Badge>
-            </AccordionTrigger>
-            <AccordionContent>
-              {mapping.jadwalPraktek.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-2">Belum ada jadwal untuk poli ini.</p>
-              ) : (
-                <div className="space-y-2">
-                  {mapping.jadwalPraktek.map(j => (
-                    <div key={j.id} className="flex items-center justify-between rounded-md border px-3 py-2">
-                      <div className="flex items-center gap-3">
-                        <Badge variant={j.isAktif ? 'default' : 'secondary'} className="w-20 justify-center text-xs">
-                          {HARI_LABEL[j.hari] ?? j.hari}
-                        </Badge>
-                        <span className="text-sm tabular-nums">
-                          {j.jamMulai} – {j.jamSelesai}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          Kuota: {j.kuotaPasien}
-                        </span>
-                        {j.keterangan && (
-                          <span className="text-xs text-muted-foreground italic">· {j.keterangan}</span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={j.isAktif}
-                          onCheckedChange={v => toggle({ jadwalId: j.id, isAktif: v })}
-                        />
-                        <Button
-                          variant="ghost" size="icon"
-                          className="h-7 w-7 text-destructive hover:text-destructive"
-                          onClick={() => del(j.id)}
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </AccordionMulti>
-
-      {aktifMappings.length === 0 && (
+      {aktifMappings.length === 0 ? (
         <p className="text-sm text-muted-foreground text-center py-4">
           Dokter belum memiliki mapping poli. Tambahkan mapping poli terlebih dahulu.
         </p>
+      ) : (
+        <div className="space-y-4">
+          {aktifMappings.map(mapping => (
+            <div key={mapping.id} className="rounded-lg border">
+              <div className="flex items-center gap-2 px-4 py-3 border-b bg-muted/40">
+                <Badge variant="secondary" className="text-xs font-mono">
+                  {mapping.poli.kode}
+                </Badge>
+                <span className="text-sm font-medium">{mapping.poli.nama}</span>
+                <Badge variant="outline" className="ml-auto text-xs">
+                  {mapping.jadwalPraktek.length} jadwal
+                </Badge>
+              </div>
+
+              <div className="p-3">
+                {mapping.jadwalPraktek.length === 0 ? (
+                  <p className="text-sm text-muted-foreground py-1 px-1">
+                    Belum ada jadwal untuk poli ini.
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    {mapping.jadwalPraktek.map(j => (
+                      <div
+                        key={j.id}
+                        className="flex items-center justify-between rounded-md border px-3 py-2"
+                      >
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <Badge
+                            variant={j.isAktif ? 'default' : 'secondary'}
+                            className="w-20 justify-center text-xs"
+                          >
+                            {HARI_LABEL[j.hari] ?? j.hari}
+                          </Badge>
+                          <span className="text-sm tabular-nums font-medium">
+                            {j.jamMulai} – {j.jamSelesai}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            Kuota: {j.kuotaPasien}
+                          </span>
+                          {j.keterangan && (
+                            <span className="text-xs text-muted-foreground italic">
+                              · {j.keterangan}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={j.isAktif}
+                            onCheckedChange={v => toggle({ jadwalId: j.id, isAktif: v })}
+                          />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-destructive hover:text-destructive"
+                            onClick={() => del(j.id)}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
