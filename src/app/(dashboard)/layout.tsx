@@ -74,9 +74,8 @@ function Breadcrumb() {
     if (part === "dashboard") continue;
 
     if (ID_PATTERN.test(part) && segments.length > 0) {
-      for (const seg of segments) {
-        crumbs.push({ label: seg.label, href: seg.href ?? accumulated });
-      }
+      const last = segments[segments.length - 1];
+      crumbs.push({ label: last.label, href: last.href ?? accumulated });
       break;
     }
 
