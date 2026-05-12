@@ -47,7 +47,7 @@ type TindakanRow = {
 
 type AlatRow = {
   id:          string;
-  dipakaiOleh: string | null;
+  dipakaiOleh?: string | null;
   catatan:     string | null;
   waktuMulai:  string;
   peralatan:   { id: string; kode: string; nama: string; merk: string | null; tarif: number | null };
