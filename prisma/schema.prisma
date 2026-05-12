@@ -117,6 +117,18 @@ enum StatusPeralatan {
   RUSAK
 }
 
+enum StatusAppointment {
+  BOOKED
+  CHECKED_IN
+  CANCELLED
+}
+
+enum TipePenjamin {
+  UMUM
+  BPJS
+  ASURANSI
+}
+
 enum StatusPenunjang {
   DIPESAN
   DIPROSES
