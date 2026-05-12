@@ -35,11 +35,10 @@ export async function PATCH(
       );
     }
 
-    // selesaiAt akan aktif setelah dev server di-restart
     const result = await prisma.kunjungan.update({
       where: { id },
-      data:  { status: 'SELESAI' },
-      select: { id: true, status: true },
+      data:  { status: 'SELESAI', selesaiAt: new Date() },
+      select: { id: true, status: true, selesaiAt: true },
     });
 
     return NextResponse.json(result);
