@@ -295,9 +295,8 @@ function MonitoringTable({
           </TableRow>
         ))}
         {alatList.map(a => {
-          const qtyMatch = a.catatan?.match(/Qty: (\d+)/);
-          const qty      = qtyMatch ? Number(qtyMatch[1]) : 1;
-          const catatan  = a.catatan?.replace(/Qty: \d+\s*\|?\s*/, '').trim();
+          const qty     = Number(a.catatan?.match(/Qty: (\d+)/)?.[1] ?? 1);
+          const catatan = a.catatan?.replace(/Qty: \d+\s*\|?\s*/, '').trim();
           return (
             <TableRow key={a.id}>
               <TableCell className="text-xs tabular-nums text-muted-foreground">
@@ -310,7 +309,6 @@ function MonitoringTable({
               <TableCell>
                 <Badge variant="secondary" className="text-xs bg-orange-50 text-orange-700">Peralatan</Badge>
               </TableCell>
-              <TableCell className="text-sm">{a.dipakaiOleh ?? '—'}</TableCell>
               <TableCell className="text-sm tabular-nums">{qty}</TableCell>
               <TableCell className="text-xs text-muted-foreground">
                 {a.peralatan.tarif ? formatRupiah(a.peralatan.tarif * qty) : '—'}
