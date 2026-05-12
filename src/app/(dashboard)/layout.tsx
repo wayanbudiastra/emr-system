@@ -32,6 +32,78 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import type { Role } from "@prisma/client";
 
+const ROUTE_LABELS: Record<string, string> = {
+  dashboard:    "Dashboard",
+  pengaturan:   "Pengaturan",
+  pengguna:     "Pengguna",
+  klinik:       "Klinik",
+  masterdata:   "Data Klinis",
+  "data-dokter": "Data Dokter",
+  poli:         "Poliklinik",
+  tindakan:     "Tindakan",
+  penunjang:    "Penunjang",
+  peralatan:    "Peralatan",
+  laboratorium: "Laboratorium",
+  radiologi:    "Radiologi",
+  pasien:       "Pasien",
+  pendaftaran:  "Pendaftaran",
+  pemeriksaan:  "Pemeriksaan",
+  "rawat-inap": "Rawat Inap",
+  farmasi:      "Farmasi",
+  resep:        "Resep",
+  "stok-obat":  "Stok Obat",
+  billing:      "Billing",
+  laporan:      "Laporan",
+};
+
+const ID_PATTERN = /^[a-z0-9]{20,}$/i;
+
+function Breadcrumb() {
+  const pathname   = usePathname();
+  const { segments } = useBreadcrumb();
+
+  const parts = pathname.split("/").filter(Boolean);
+
+  const crumbs: { label: string; href: string }[] = [
+    { label: "Dashboard", href: "/dashboard" },
+  ];
+
+  let accumulated = "";
+  for (const part of parts) {
+    accumulated += `/${part}`;
+    if (part === "dashboard") continue;
+
+    if (ID_PATTERN.test(part) && segments.length > 0) {
+      for (const seg of segments) {
+        crumbs.push({ label: seg.label, href: seg.href ?? accumulated });
+      }
+      break;
+    }
+
+    const label = ROUTE_LABELS[part] ?? part.replace(/-/g, " ");
+    crumbs.push({ label, href: accumulated });
+  }
+
+  if (crumbs.length <= 1) return null;
+
+  return (
+    <div className="hidden sm:flex items-center gap-1.5 text-sm text-muted-foreground">
+      {crumbs.map((crumb, i) => (
+        <span key={crumb.href} className="flex items-center gap-1.5">
+          {i > 0 && <span className="text-muted-foreground/50">/</span>}
+          {i === crumbs.length - 1 ? (
+            <span className="text-foreground font-medium capitalize">{crumb.label}</span>
+          ) : (
+            <a href={crumb.href} className="hover:text-foreground transition-colors capitalize">
+              {crumb.label}
+            </a>
+          )}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 const roleLabels: Record<string, string> = {
   SUPER_ADMIN: "Super Admin",
   ADMIN: "Admin",
