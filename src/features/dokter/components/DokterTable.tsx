@@ -85,7 +85,7 @@ export function DokterTable({ data, isLoading }: Props) {
             </TableCell>
             <TableCell>
               <Link
-                href={`/data-dokter/${d.id}`}
+                href={`/pengaturan/data-dokter/${d.id}`}
                 className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }))}
               >
                 <Eye className="h-4 w-4" />
