@@ -8,7 +8,7 @@ import { id as idLocale } from 'date-fns/locale';
 import {
   ClipboardList, Calendar, UserPlus, List,
   Search, RefreshCw, Clock, Users, CheckCircle2,
-  XCircle, Ticket, AlertCircle,
+  XCircle, Ticket, AlertCircle, Pencil,
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
