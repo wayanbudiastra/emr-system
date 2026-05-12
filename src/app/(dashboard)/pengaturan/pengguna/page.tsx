@@ -108,7 +108,7 @@ function UserFormDialog({
   const [form, setForm] = useState({
     nama: user?.nama ?? "", email: user?.email ?? "", password: "",
     role: user?.role ?? "ADMISSION", nip: user?.nip ?? "", telepon: user?.telepon ?? "",
-    sip: user?.dokter?.sip ?? "", spesialisasi: user?.dokter?.spesialisasi ?? "",
+    noSIP: user?.dokterProfile?.noSIP ?? "", spesialisasi: user?.dokterProfile?.spesialisasi ?? "",
   });
 
   const set = (k: string, v: string) => setForm((p) => ({ ...p, [k]: v }));
