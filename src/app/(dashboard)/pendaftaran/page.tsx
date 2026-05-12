@@ -558,9 +558,9 @@ function TabPendaftaran({ initialKode }: { initialKode?: string }) {
   );
 }
 
-function CheckinForm() {
-  const [kode, setKode]         = useState('');
-  const [debouncedKode, setDb]  = useState('');
+function CheckinForm({ initialKode }: { initialKode?: string }) {
+  const [kode, setKode]         = useState(initialKode ?? '');
+  const [debouncedKode, setDb]  = useState(initialKode ?? '');
   const [penjamin, setPenjamin] = useState('UMUM');
   const { mutate: checkin, isPending, isSuccess, data: result, reset } = useCheckinAppointment();
   const { data: booking, isLoading, error } = useBookingByKode(debouncedKode);
