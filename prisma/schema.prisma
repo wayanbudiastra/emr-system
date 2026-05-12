@@ -479,9 +479,9 @@ model Resep {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  kunjungan   Kunjungan   @relation(fields: [kunjunganId], references: [id])
-  dokter      Dokter?     @relation(fields: [dokterId], references: [id])
-  items       ItemResep[]
+  kunjungan      Kunjungan      @relation(fields: [kunjunganId], references: [id])
+  dokterProfile  DokterProfile? @relation(fields: [dokterId], references: [id])
+  items          ItemResep[]
 
   @@map("resep")
 }
