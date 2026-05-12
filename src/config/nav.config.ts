@@ -114,6 +114,12 @@ export const navConfig: NavItem[] = [
       },
     ],
   },
+  {
+    title: "Data Dokter",
+    href: "/data-dokter",
+    icon: UserRoundCheck,
+    roles: [Role.SUPER_ADMIN],
+  },
 ];
 
 export function getNavItemsForRole(role: Role): NavItem[] {
