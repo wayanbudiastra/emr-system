@@ -138,6 +138,8 @@ export const masterdataRepository = {
   },
 
   async updatePeralatan(id: string, data: Partial<{ nama: string; merk: string; deskripsi: string; tarif: number; tarifBPJS: number; status: StatusPeralatan; lokasiTerakhir: string; tanggalKalibrasi: Date }>) {
+    if (typeof id !== "string") throw new Error("masterdataRepository.updatePeralatan: id harus string (mungkin argumen tertukar)");
+    if (data == null || typeof data !== "object") throw new Error("masterdataRepository.updatePeralatan: data harus object");
     const prisma = await getPrisma();
     return prisma.peralatanMedis.update({ where: { id }, data });
   },

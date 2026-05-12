@@ -81,6 +81,8 @@ export const masterdataService = {
   },
 
   async updatePeralatan(id: string, dto: { nama?: string; merk?: string; deskripsi?: string; tarif?: number; tarifBPJS?: number; status?: string; lokasiTerakhir?: string; tanggalKalibrasi?: string }) {
+    if (typeof id !== "string") throw new Error("updatePeralatan: id harus bertipe string (mungkin argumen tertukar)");
+    if (dto == null || typeof dto !== "object") throw new Error("updatePeralatan: dto harus berupa object");
     type UpdateData = Parameters<typeof masterdataRepository.updatePeralatan>[1];
     const data: UpdateData = {};
     if (dto.nama            !== undefined) data.nama             = dto.nama;
