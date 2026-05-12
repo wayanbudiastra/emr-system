@@ -213,23 +213,71 @@ model Poli {
   @@map("poli")
 }
 
-model Dokter {
-  id           String    @id @default(cuid())
-  userId       String    @unique
-  nip          String?   @unique
-  sip          String?
-  spesialisasi String?
-  jadwalPraktek Json?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+model DokterProfile {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  nik           String?   @unique
+  noSIP         String?   @unique
+  tglExpiredSIP DateTime?
+  spesialisasi  String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  user         User      @relation(fields: [userId], references: [id])
-  poli         Poli?     @relation(fields: [poliId], references: [id])
-  poliId       String?
-  kunjungan    Kunjungan[]
-  resep        Resep[]
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  poliMapping   DokterPoli[]
+  sharingFee    SharingFee[]
+  kunjungan     Kunjungan[]
+  resep         Resep[]
 
-  @@map("dokter")
+  @@map("dokter_profile")
+}
+
+model DokterPoli {
+  id              String    @id @default(cuid())
+  dokterProfileId String
+  poliId          String
+  isAktif         Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  dokterProfile   DokterProfile  @relation(fields: [dokterProfileId], references: [id], onDelete: Cascade)
+  poli            Poli           @relation(fields: [poliId], references: [id], onDelete: Cascade)
+  jadwalPraktek   JadwalPraktek[]
+
+  @@unique([dokterProfileId, poliId])
+  @@map("dokter_poli")
+}
+
+model JadwalPraktek {
+  id           String     @id @default(cuid())
+  dokterPoliId String
+  hari         HariKerja
+  jamMulai     String
+  jamSelesai   String
+  kuotaPasien  Int        @default(20)
+  isAktif      Boolean    @default(true)
+  keterangan   String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  dokterPoli   DokterPoli @relation(fields: [dokterPoliId], references: [id], onDelete: Cascade)
+
+  @@map("jadwal_praktek")
+}
+
+model SharingFee {
+  id              String       @id @default(cuid())
+  dokterProfileId String
+  kategori        KategoriItem
+  persentase      Float
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  dokterProfile   DokterProfile @relation(fields: [dokterProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([dokterProfileId, kategori])
+  @@map("sharing_fee")
 }
 
 model Perawat {
