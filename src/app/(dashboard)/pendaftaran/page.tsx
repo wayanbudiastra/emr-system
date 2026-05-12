@@ -30,9 +30,10 @@ import {
   Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 } from '@/components/ui/form';
 import {
-  useJadwalTersedia, useListPendaftaran,
+  useJadwalTersedia, useListPendaftaran, useAppointmentList,
   useCreateAppointment, useCheckinAppointment, useWalkin,
-  useCancelKunjungan, useBookingByKode,
+  useCancelKunjungan, useBookingByKode, useCancelAppointment,
+  useUpdateAppointment,
 } from '@/features/pendaftaran/hooks/usePendaftaran';
 import { usePasienList } from '@/features/pasien/hooks/usePasien';
 import { createAppointmentSchema, walkinSchema } from '@/features/pendaftaran/schemas/pendaftaran.schema';
