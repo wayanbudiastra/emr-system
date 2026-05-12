@@ -79,7 +79,7 @@ function ICD10Search({
             <div key={item.kode}
               className="flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-sm">
               <span className="font-mono text-xs font-semibold text-primary">{item.kode}</span>
-              <span className="text-xs max-w-[200px] truncate">{item.deskripsi}</span>
+              <span className="text-xs max-w-50 truncate">{item.deskripsi}</span>
               <button onClick={() => onRemove(item.kode)}
                 className="text-muted-foreground hover:text-destructive ml-1">
                 <X className="h-3 w-3" />
