@@ -55,17 +55,15 @@ type AlatRow = {
 
 // ── Cart ──────────────────────────────────────────────────────
 type TindakanCart = {
-  item:      MasterTindakanItem;
-  jumlah:    number;
-  pelaksana: string;
-  catatan:   string;
+  item:    MasterTindakanItem;
+  jumlah:  number;
+  catatan: string;
 };
 
 type AlatCart = {
-  item:        PeralatanItem;
-  jumlah:      number;
-  dipakaiOleh: string;
-  catatan:     string;
+  item:    PeralatanItem;
+  jumlah:  number;
+  catatan: string;
 };
 
 const formatRupiah = (n: number) =>
