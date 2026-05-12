@@ -15,10 +15,7 @@ export const dokterProfileSchema = z.object({
     .max(50, 'Nomor SIP terlalu panjang')
     .optional()
     .or(z.literal('')),
-  tglExpiredSIP: z
-    .coerce.date()
-    .optional()
-    .nullable(),
+  tglExpiredSIP: z.coerce.date().optional().nullable(),
   spesialisasi: z
     .string()
     .max(100, 'Spesialisasi terlalu panjang')
@@ -30,11 +27,9 @@ export const mappingPoliSchema = z.object({
 });
 
 export const sharingFeeItemSchema = z.object({
-  kategori: z.enum(['TINDAKAN', 'LAB', 'RADIOLOGI', 'PERALATAN'], {
-    required_error: 'Kategori wajib dipilih',
-  }),
+  kategori: z.enum(['TINDAKAN', 'LAB', 'RADIOLOGI', 'PERALATAN']),
   persentase: z
-    .number({ required_error: 'Persentase wajib diisi' })
+    .number()
     .min(0, 'Persentase minimal 0%')
     .max(100, 'Persentase maksimal 100%'),
 });
@@ -46,10 +41,8 @@ export const sharingFeeSchema = z.object({
 export const jadwalPraktekSchema = z
   .object({
     dokterPoliId: z.string().min(1, 'Mapping poli wajib dipilih'),
-    hari: z.enum(['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU', 'MINGGU'], {
-      required_error: 'Hari wajib dipilih',
-    }),
-    jamMulai: z.string().regex(rJam, 'Format jam tidak valid (HH:MM)'),
+    hari: z.enum(['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU', 'MINGGU']),
+    jamMulai:   z.string().regex(rJam, 'Format jam tidak valid (HH:MM)'),
     jamSelesai: z.string().regex(rJam, 'Format jam tidak valid (HH:MM)'),
     kuotaPasien: z
       .number()
@@ -74,7 +67,7 @@ export const jadwalPraktekSchema = z
     }
   });
 
-export type DokterProfileValues = z.infer<typeof dokterProfileSchema>;
-export type MappingPoliValues = z.infer<typeof mappingPoliSchema>;
+export type DokterProfileValues  = z.infer<typeof dokterProfileSchema>;
+export type MappingPoliValues    = z.infer<typeof mappingPoliSchema>;
 export type SharingFeeFormValues = z.infer<typeof sharingFeeSchema>;
-export type JadwalPraktekValues = z.infer<typeof jadwalPraktekSchema>;
+export type JadwalPraktekValues  = z.output<typeof jadwalPraktekSchema>;
