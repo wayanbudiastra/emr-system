@@ -511,7 +511,7 @@ export function PemeriksaanDetailClient({ id }: { id: string }) {
                 poliId={kunjungan.poli?.id ?? null}
               />
             )}
-            {activeModule === 'resep'      && <ComingSoon label="Medication" />}
+            {activeModule === 'resep'      && <ModuleResep kunjunganId={kunjungan.id} />}
           </CardContent>
         </Card>
       </div>
