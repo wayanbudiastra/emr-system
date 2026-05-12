@@ -8,16 +8,15 @@ export const createUserSchema = z
     role:         z.enum(["SUPER_ADMIN", "ADMISSION", "KASIR", "DOKTER", "PERAWAT", "APOTEKER"]),
     nip:          z.string().optional(),
     telepon:      z.string().optional(),
-    sip:          z.string().optional(),
+    noSIP:        z.string().optional(),
     spesialisasi: z.string().optional(),
-    poliId:       z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    if (data.role === "DOKTER" && !data.sip) {
+    if (data.role === "DOKTER" && !data.noSIP) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "SIP wajib diisi untuk Dokter",
-        path: ["sip"],
+        message: "Nomor SIP wajib diisi untuk Dokter",
+        path: ["noSIP"],
       });
     }
   });
