@@ -118,7 +118,7 @@ export function JadwalPraktekTable({ dokterProfileId, poliMappings }: Props) {
             </AccordionContent>
           </AccordionItem>
         ))}
-      </Accordion>
+      </AccordionMulti>
 
       {aktifMappings.length === 0 && (
         <p className="text-sm text-muted-foreground text-center py-4">
