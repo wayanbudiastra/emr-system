@@ -64,8 +64,15 @@ function hitungUsia(tanggalLahir: string): number {
 }
 
 function WaitingTime({ since }: { since: string }) {
-  const [now] = useState(() => Date.now());
-  const mins  = Math.floor((now - new Date(since).getTime()) / 60000);
+  const [mins, setMins] = useState(0);
+
+  useEffect(() => {
+    const calc = () => Math.floor((Date.now() - new Date(since).getTime()) / 60000);
+    setMins(calc());
+    const interval = setInterval(() => setMins(calc()), 60_000);
+    return () => clearInterval(interval);
+  }, [since]);
+
   const color = mins > 30 ? 'text-red-600' : mins > 15 ? 'text-yellow-600' : 'text-muted-foreground';
   return (
     <span className={`text-xs tabular-nums ${color}`}>
