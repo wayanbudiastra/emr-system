@@ -29,9 +29,8 @@ export const updateUserSchema = z
     nip:          z.string().optional(),
     telepon:      z.string().optional(),
     isActive:     z.boolean().optional(),
-    sip:          z.string().optional(),
+    noSIP:        z.string().optional(),
     spesialisasi: z.string().optional(),
-    poliId:       z.string().optional(),
   });
 
 export const resetPasswordSchema = z
