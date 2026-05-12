@@ -47,9 +47,9 @@ export default function DokterDetailPage({ params }: Props) {
     return (
       <div className="text-center py-16">
         <p className="text-muted-foreground">Data dokter tidak ditemukan.</p>
-        <Button asChild variant="outline" className="mt-4">
-          <Link href="/data-dokter">Kembali</Link>
-        </Button>
+        <Link href="/data-dokter" className={cn(buttonVariants({ variant: 'outline' }), 'mt-4')}>
+          Kembali
+        </Link>
       </div>
     );
   }
