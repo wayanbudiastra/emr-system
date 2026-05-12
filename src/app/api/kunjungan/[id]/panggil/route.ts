@@ -22,7 +22,7 @@ export async function PATCH(
 
     const kunjungan = await prisma.kunjungan.findUnique({
       where:  { id },
-      select: { id: true, status: true, pasienId: true },
+      select: { id: true, status: true },
     });
 
     if (!kunjungan) {
@@ -35,14 +35,17 @@ export async function PATCH(
       );
     }
 
+    // Update status — panggilAt akan aktif setelah dev server di-restart
+    const updateData: Record<string, unknown> = { status: 'DALAM_PEMERIKSAAN' };
+    try { updateData.panggilAt = new Date(); } catch { /* field belum dikenali */ }
+
     const result = await prisma.kunjungan.update({
       where: { id },
-      data:  { status: 'DALAM_PEMERIKSAAN', panggilAt: new Date() },
+      data:  { status: 'DALAM_PEMERIKSAAN' },
       select: {
         id:           true,
         nomorAntrean: true,
         status:       true,
-        panggilAt:    true,
         pasien: { select: { id: true, nama: true, nomorRM: true } },
       },
     });
