@@ -369,6 +369,7 @@ model Kunjungan {
   keluhan        String?
   status         StatusKunjungan  @default(MENUNGGU)
   tipePembayaran String?
+  penjamin       TipePenjamin?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
@@ -381,8 +382,39 @@ model Kunjungan {
   billing             Billing?
   tindakan            Tindakan[]
   permintaanPenunjang PermintaanPenunjang[]
+  appointment         Appointment?
 
   @@map("kunjungan")
+}
+
+model Appointment {
+  id              String            @id @default(cuid())
+  kodeBooking     String            @unique
+
+  pasienId        String?
+  namaPasien      String?
+  nikSementara    String?
+  noHP            String?
+
+  dokterProfileId String
+  jadwalPraktekId String
+  tanggalPraktek  DateTime
+  keluhan         String?
+  catatan         String?
+  penjamin        TipePenjamin      @default(UMUM)
+
+  status          StatusAppointment @default(BOOKED)
+  kunjunganId     String?           @unique
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  pasien          Pasien?           @relation(fields: [pasienId], references: [id])
+  dokterProfile   DokterProfile     @relation(fields: [dokterProfileId], references: [id])
+  jadwalPraktek   JadwalPraktek     @relation(fields: [jadwalPraktekId], references: [id])
+  kunjungan       Kunjungan?        @relation(fields: [kunjunganId], references: [id])
+
+  @@map("appointment")
 }
 
 model AsesmenPerawat {
