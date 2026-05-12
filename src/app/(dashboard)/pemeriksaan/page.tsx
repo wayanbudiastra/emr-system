@@ -186,8 +186,9 @@ function KunjunganTable({
 
 export default function PemeriksaanPage() {
   const qc = useQueryClient();
-  const [search, setSearch] = useState('');
-  const [tanggal]           = useState(TODAY);
+  const [search,  setSearch]  = useState('');
+  const [tanggal]             = useState(TODAY);
+  const [now]                 = useState(() => new Date());
 
   const { data: allData, isLoading } = useQuery({
     queryKey: ['pemeriksaan-list', tanggal],
