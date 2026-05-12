@@ -250,7 +250,7 @@ export default function PemeriksaanPage() {
           <div>
             <h1 className="text-2xl font-bold">Pemeriksaan</h1>
             <p className="text-sm text-muted-foreground">
-              {format(now, 'EEEE, dd MMMM yyyy', { locale: idLocale })}
+              {displayDate}
             </p>
           </div>
         </div>
