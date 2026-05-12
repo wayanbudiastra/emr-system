@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { BreadcrumbProvider, useBreadcrumb } from "@/contexts/breadcrumb";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { getNavItemsForRole } from "@/config/nav.config";
