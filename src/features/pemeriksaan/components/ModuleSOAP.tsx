@@ -121,7 +121,7 @@ function ICD10Search({
                     <span className="text-sm">{item.deskripsi}</span>
                   </div>
                   <Button size="sm" variant={isSelected ? 'secondary' : 'ghost'}
-                    className="h-7 text-xs ml-2 flex-shrink-0"
+                    className="h-7 text-xs ml-2 shrink-0"
                     disabled={isSelected}
                     onClick={() => { onAdd(item); setQ(''); setDb(''); }}>
                     {isSelected ? (
@@ -288,7 +288,7 @@ export function ModuleSOAP({ kunjunganId, asesmen, existingSoap }: {
       {/* Status banner if already saved */}
       {isExisting && (
         <div className="flex items-center gap-2 text-xs text-green-800 bg-green-50 border border-green-200 rounded px-3 py-2">
-          <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
+          <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
           SOAP sudah tersimpan — edit untuk memperbarui catatan
         </div>
       )}
