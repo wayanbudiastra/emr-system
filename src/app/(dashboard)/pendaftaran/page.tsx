@@ -363,14 +363,17 @@ function AppointmentFormDialog({ jadwal, tanggal, onClose }: { jadwal: JadwalIte
                     onChange={e => { setPasienSearch(e.target.value); field.onChange(''); }}
                   />
                   {pasienData?.data?.length > 0 && !field.value && pasienSearch && (
-                    <div className="border rounded-md divide-y max-h-36 overflow-y-auto">
-                      {pasienData.data.map((p: { id: string; nama: string; nomorRM: string }) => (
+                    <div className="border rounded-md divide-y max-h-40 overflow-y-auto">
+                      {pasienData.data.map((p: { id: string; nama: string; nomorRM: string; tanggalLahir: string }) => (
                         <button key={p.id} type="button"
                           className="w-full text-left px-3 py-2 text-sm hover:bg-muted"
                           onClick={() => { field.onChange(p.id); setPasienSearch(`${p.nama} (${p.nomorRM})`); }}
                         >
-                          <span className="font-medium">{p.nama}</span>
-                          <span className="text-muted-foreground ml-2 text-xs">{p.nomorRM}</span>
+                          <div className="font-medium">{p.nama}</div>
+                          <div className="text-xs text-muted-foreground flex gap-3">
+                            <span>{p.nomorRM}</span>
+                            {p.tanggalLahir && <span>· {format(new Date(p.tanggalLahir), 'dd/MM/yyyy')}</span>}
+                          </div>
                         </button>
                       ))}
                     </div>
