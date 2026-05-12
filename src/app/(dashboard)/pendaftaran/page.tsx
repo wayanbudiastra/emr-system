@@ -107,10 +107,17 @@ type JadwalItem = {
 function TabAppointment() {
   const [tanggal, setTanggal]           = useState(TODAY);
   const [spesialisasi, setSpesialisasi] = useState('');
+  const [searchAppt, setSearchAppt]    = useState('');
   const [selectedJadwal, setSelectedJadwal] = useState<JadwalItem | null>(null);
+  const [editAppt, setEditAppt]         = useState<AppointmentRow | null>(null);
+  const qc = useQueryClient();
 
-  const { data: jadwalList, isLoading } = useJadwalTersedia({ tanggal, spesialisasi: spesialisasi || undefined });
+  const { data: jadwalList, isLoading }     = useJadwalTersedia({ tanggal, spesialisasi: spesialisasi || undefined });
+  const { data: apptData, isLoading: apptLoading } = useAppointmentList({ tanggal, q: searchAppt || undefined });
+  const { mutate: cancelAppt }              = useCancelAppointment();
+
   const jadwal: JadwalItem[] = jadwalList ?? [];
+  const appointments: AppointmentRow[] = apptData?.data ?? [];
 
   const spesialisasiList: string[] = Array.from(
     new Set(jadwal.map(j => j.dokterPoli.dokterProfile.spesialisasi).filter((s): s is string => Boolean(s)))
@@ -121,7 +128,8 @@ function TabAppointment() {
     : jadwal;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Filter Jadwal */}
       <Card>
         <CardContent className="pt-4 pb-4">
           <div className="flex flex-wrap gap-3 items-end">
@@ -143,47 +151,153 @@ function TabAppointment() {
         </CardContent>
       </Card>
 
-      {isLoading ? (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {[1,2,3].map(i => <Skeleton key={i} className="h-32 w-full" />)}
-        </div>
-      ) : !filtered.length ? (
-        <div className="text-center py-12 text-muted-foreground">
-          <Calendar className="mx-auto h-10 w-10 mb-2 opacity-30" />
-          <p>Tidak ada jadwal tersedia pada tanggal ini.</p>
-        </div>
-      ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map(j => (
-            <Card key={j.id} className={!j.tersedia ? 'opacity-60' : 'cursor-pointer hover:border-primary transition-colors'}>
-              <CardContent className="pt-4 pb-3 space-y-2">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold text-sm">dr. {j.dokterPoli.dokterProfile.user.nama}</p>
-                    <p className="text-xs text-muted-foreground">{j.dokterPoli.dokterProfile.spesialisasi ?? 'Umum'} · {j.dokterPoli.poli.nama}</p>
+      {/* Grid Jadwal */}
+      <div>
+        <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">Jadwal Tersedia</h3>
+        {isLoading ? (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {[1,2,3].map(i => <Skeleton key={i} className="h-32 w-full" />)}
+          </div>
+        ) : !filtered.length ? (
+          <div className="text-center py-8 text-muted-foreground border rounded-lg">
+            <Calendar className="mx-auto h-8 w-8 mb-2 opacity-30" />
+            <p className="text-sm">Tidak ada jadwal tersedia pada tanggal ini.</p>
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map(j => (
+              <Card key={j.id} className={!j.tersedia ? 'opacity-60' : 'hover:border-primary transition-colors'}>
+                <CardContent className="pt-4 pb-3 space-y-2">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-semibold text-sm">dr. {j.dokterPoli.dokterProfile.user.nama}</p>
+                      <p className="text-xs text-muted-foreground">{j.dokterPoli.dokterProfile.spesialisasi ?? 'Umum'} · {j.dokterPoli.poli.nama}</p>
+                    </div>
+                    <Badge variant={j.tersedia ? 'default' : 'secondary'} className="text-xs">
+                      {j.tersedia ? `${j.sisaKuota} sisa` : 'Penuh'}
+                    </Badge>
                   </div>
-                  <Badge variant={j.tersedia ? 'default' : 'secondary'} className="text-xs">
-                    {j.tersedia ? `${j.sisaKuota} sisa` : 'Penuh'}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>{j.jamMulai} – {j.jamSelesai}</span>
-                  <span>·</span>
-                  <Users className="h-3.5 w-3.5" />
-                  <span>{j.kuotaTerpakai}/{j.kuotaPasien}</span>
-                </div>
-                <Button size="sm" className="w-full" disabled={!j.tersedia} onClick={() => setSelectedJadwal(j)}>
-                  Buat Appointment
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Clock className="h-3.5 w-3.5" />
+                    <span>{j.jamMulai} – {j.jamSelesai}</span>
+                    <span>·</span>
+                    <Users className="h-3.5 w-3.5" />
+                    <span>{j.kuotaTerpakai}/{j.kuotaPasien}</span>
+                  </div>
+                  <Button size="sm" className="w-full" disabled={!j.tersedia} onClick={() => setSelectedJadwal(j)}>
+                    Buat Appointment
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* List Appointment */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            Daftar Appointment ({apptData?.total ?? 0})
+          </h3>
+          <div className="flex gap-2">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+              <Input placeholder="Cari nama / kode..." className="pl-8 h-8 text-sm w-52"
+                value={searchAppt} onChange={e => setSearchAppt(e.target.value)} />
+            </div>
+            <Button variant="outline" size="icon" className="h-8 w-8"
+              onClick={() => qc.invalidateQueries({ queryKey: ['appointments'] })}>
+              <RefreshCw className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         </div>
-      )}
+
+        <Card>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Kode Booking</TableHead>
+                  <TableHead>Pasien</TableHead>
+                  <TableHead>Dokter</TableHead>
+                  <TableHead>Jadwal</TableHead>
+                  <TableHead>Penjamin</TableHead>
+                  <TableHead>Keluhan</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="w-24" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {apptLoading
+                  ? Array.from({ length: 3 }).map((_, i) => (
+                      <TableRow key={i}>
+                        {Array.from({ length: 8 }).map((_, j) => (
+                          <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  : !appointments.length
+                  ? (
+                    <TableRow>
+                      <TableCell colSpan={8} className="text-center py-8 text-muted-foreground text-sm">
+                        Belum ada appointment pada tanggal ini
+                      </TableCell>
+                    </TableRow>
+                  )
+                  : appointments.map(a => (
+                    <TableRow key={a.id}>
+                      <TableCell>
+                        <span className="font-mono text-xs font-semibold">{a.kodeBooking}</span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm font-medium">
+                          {a.pasien?.nama ?? a.namaPasien ?? '—'}
+                        </div>
+                        <div className="text-xs text-muted-foreground">{a.pasien?.nomorRM}</div>
+                      </TableCell>
+                      <TableCell className="text-sm">dr. {a.dokterProfile.user.nama}</TableCell>
+                      <TableCell className="text-xs tabular-nums">
+                        {a.jadwalPraktek.jamMulai}–{a.jadwalPraktek.jamSelesai}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="text-xs">{a.penjamin}</Badge>
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground max-w-[120px] truncate">
+                        {a.keluhan ?? '—'}
+                      </TableCell>
+                      <TableCell>
+                        <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${APPT_STATUS_COLORS[a.status] ?? ''}`}>
+                          {APPT_STATUS_LABELS[a.status] ?? a.status}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        {a.status === 'BOOKED' && (
+                          <div className="flex gap-1">
+                            <Button variant="ghost" size="icon" className="h-7 w-7" title="Edit" onClick={() => setEditAppt(a)}>
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive"
+                              title="Batalkan" onClick={() => cancelAppt(a.id)}>
+                              <XCircle className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
 
       {selectedJadwal && (
         <AppointmentFormDialog jadwal={selectedJadwal} tanggal={tanggal} onClose={() => setSelectedJadwal(null)} />
+      )}
+
+      {editAppt && (
+        <EditAppointmentDialog appointment={editAppt} tanggal={tanggal} onClose={() => setEditAppt(null)} />
       )}
     </div>
   );
