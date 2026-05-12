@@ -2,7 +2,10 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { dokterProfileSchema, type DokterProfileValues } from '../schemas/dokter.schema';
+import { z } from 'zod';
+import { dokterProfileSchema } from '../schemas/dokter.schema';
+
+type DokterProfileFormValues = z.infer<typeof dokterProfileSchema>;
 import {
   Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 } from '@/components/ui/form';
