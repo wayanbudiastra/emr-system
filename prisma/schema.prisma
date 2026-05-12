@@ -335,6 +335,7 @@ model Pasien {
   kontakDarurat   KontakDarurat[]
   kunjungan       Kunjungan[]
   rawatInap       RawatInap[]
+  appointments    Appointment[]
 
   @@map("pasien")
 }
