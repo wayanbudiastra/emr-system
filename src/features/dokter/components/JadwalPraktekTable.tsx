@@ -5,6 +5,8 @@ import { Badge }     from '@/components/ui/badge';
 import { Button }    from '@/components/ui/button';
 import { Switch }    from '@/components/ui/switch';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const AccordionMulti = Accordion as any;
 import { Trash2, CalendarPlus } from 'lucide-react';
 import { useToggleJadwal, useDeleteJadwal } from '../hooks/useDokter';
 import { JadwalPraktekForm } from './JadwalPraktekForm';
