@@ -445,7 +445,7 @@ export function ModuleTindakan({
 
   // ── Cart Helpers ──────────────────────────────────────────
   const addTindakan = useCallback((item: MasterTindakanItem) => {
-    setCartTindakan(p => [...p, { item, jumlah: 1, pelaksana: '', catatan: '' }]);
+    setCartTindakan(p => [...p, { item, jumlah: 1, catatan: '' }]);
   }, []);
 
   const addAlat = useCallback((item: PeralatanItem) => {
