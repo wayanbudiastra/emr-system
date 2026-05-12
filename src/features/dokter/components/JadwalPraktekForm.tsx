@@ -59,7 +59,7 @@ export function JadwalPraktekForm({ dokterProfileId, dokterPoliList, onSuccess }
         <FormField control={form.control} name="dokterPoliId" render={({ field }) => (
           <FormItem>
             <FormLabel>Poli <span className="text-destructive">*</span></FormLabel>
-            <Select onValueChange={field.onChange} value={field.value ?? ''}>
+            <Select onValueChange={(v) => field.onChange(v ?? '')} value={field.value ?? ''}>
               <FormControl>
                 <SelectTrigger><SelectValue placeholder="— Pilih Poli —" /></SelectTrigger>
               </FormControl>
@@ -78,7 +78,7 @@ export function JadwalPraktekForm({ dokterProfileId, dokterPoliList, onSuccess }
         <FormField control={form.control} name="hari" render={({ field }) => (
           <FormItem>
             <FormLabel>Hari Praktek <span className="text-destructive">*</span></FormLabel>
-            <Select onValueChange={field.onChange} value={field.value ?? ''}>
+            <Select onValueChange={(v) => field.onChange(v ?? '')} value={field.value ?? ''}>
               <FormControl>
                 <SelectTrigger><SelectValue placeholder="— Pilih Hari —" /></SelectTrigger>
               </FormControl>
