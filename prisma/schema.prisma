@@ -205,7 +205,7 @@ model Poli {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 
-  dokter          Dokter[]
+  dokterMapping   DokterPoli[]
   kunjungan       Kunjungan[]
   tindakanMapping TindakanPoli[]
   penggunaanAlat  PenggunaanAlat[]
