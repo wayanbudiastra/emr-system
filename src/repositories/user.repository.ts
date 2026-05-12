@@ -65,7 +65,7 @@ export const userRepository = {
         role: data.role as Role,
         nip: data.nip, telepon: data.telepon,
         ...(data.role === "DOKTER" ? {
-          dokter: { create: { sip: data.sip, spesialisasi: data.spesialisasi, poliId: data.poliId } },
+          dokterProfile: { create: { noSIP: data.noSIP, spesialisasi: data.spesialisasi } },
         } : {}),
       },
     });
