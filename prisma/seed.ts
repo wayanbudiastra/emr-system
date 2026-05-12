@@ -285,6 +285,80 @@ async function seedPasien(prisma: any) {
   console.log(`✓ Pasien (${seeded}): ${wniPasien.length} WNI + ${wnaPasien.length} WNA`);
 }
 
+async function seedDokterV3(prisma: any) {
+  const dokterUser = await prisma.user.findFirst({ where: { email: 'dokter@emr.local', role: 'DOKTER' } });
+  if (!dokterUser) {
+    console.log('⚠ User dokter tidak ditemukan. Lewati seedDokterV3.');
+    return;
+  }
+
+  const poliUmum = await prisma.poli.findFirst({ where: { kode: 'PU' } });
+  const poliMata = await prisma.poli.findFirst({ where: { kode: 'PM' } });
+  if (!poliUmum || !poliMata) {
+    console.log('⚠ Poli PU/PM tidak ditemukan. Lewati seedDokterV3.');
+    return;
+  }
+
+  const dokterProfile = await prisma.dokterProfile.upsert({
+    where:  { userId: dokterUser.id },
+    update: {},
+    create: {
+      userId:        dokterUser.id,
+      nik:           '3201011501850001',
+      noSIP:         '446/SIP-DU/2024',
+      tglExpiredSIP: new Date('2026-12-31'),
+      spesialisasi:  'Umum',
+    },
+  });
+  console.log(`✓ DokterProfile: ${dokterUser.nama} [NIK: ${dokterProfile.nik}]`);
+
+  const mappingPU = await prisma.dokterPoli.upsert({
+    where:  { dokterProfileId_poliId: { dokterProfileId: dokterProfile.id, poliId: poliUmum.id } },
+    update: {},
+    create: { dokterProfileId: dokterProfile.id, poliId: poliUmum.id },
+  });
+  const mappingPM = await prisma.dokterPoli.upsert({
+    where:  { dokterProfileId_poliId: { dokterProfileId: dokterProfile.id, poliId: poliMata.id } },
+    update: {},
+    create: { dokterProfileId: dokterProfile.id, poliId: poliMata.id },
+  });
+  console.log(`✓ Mapping Poli: ${poliUmum.nama} + ${poliMata.nama}`);
+
+  for (const f of [
+    { kategori: 'TINDAKAN',  persentase: 15 },
+    { kategori: 'LAB',       persentase: 10 },
+    { kategori: 'RADIOLOGI', persentase: 10 },
+    { kategori: 'PERALATAN', persentase: 0  },
+  ]) {
+    await prisma.sharingFee.upsert({
+      where:  { dokterProfileId_kategori: { dokterProfileId: dokterProfile.id, kategori: f.kategori } },
+      update: { persentase: f.persentase },
+      create: { dokterProfileId: dokterProfile.id, kategori: f.kategori, persentase: f.persentase },
+    });
+  }
+  console.log('✓ Sharing Fee: Tindakan 15% · Lab 10% · Rad 10% · Peralatan 0%');
+
+  const jadwalData = [
+    { dokterPoliId: mappingPU.id, hari: 'SENIN',  jamMulai: '08:00', jamSelesai: '12:00', kuotaPasien: 20 },
+    { dokterPoliId: mappingPU.id, hari: 'SELASA', jamMulai: '08:00', jamSelesai: '12:00', kuotaPasien: 20 },
+    { dokterPoliId: mappingPU.id, hari: 'RABU',   jamMulai: '08:00', jamSelesai: '12:00', kuotaPasien: 20 },
+    { dokterPoliId: mappingPU.id, hari: 'KAMIS',  jamMulai: '13:00', jamSelesai: '17:00', kuotaPasien: 15, keterangan: 'Sesi Sore' },
+    { dokterPoliId: mappingPU.id, hari: 'JUMAT',  jamMulai: '08:00', jamSelesai: '11:00', kuotaPasien: 12 },
+    { dokterPoliId: mappingPM.id, hari: 'SENIN',  jamMulai: '13:00', jamSelesai: '16:00', kuotaPasien: 10 },
+    { dokterPoliId: mappingPM.id, hari: 'KAMIS',  jamMulai: '08:00', jamSelesai: '11:00', kuotaPasien: 10 },
+    { dokterPoliId: mappingPM.id, hari: 'SABTU',  jamMulai: '08:00', jamSelesai: '12:00', kuotaPasien: 15 },
+  ];
+
+  for (const j of jadwalData) {
+    const exists = await prisma.jadwalPraktek.findFirst({
+      where: { dokterPoliId: j.dokterPoliId, hari: j.hari, jamMulai: j.jamMulai },
+    });
+    if (!exists) await prisma.jadwalPraktek.create({ data: j });
+  }
+  console.log(`✓ Jadwal Praktek: ${jadwalData.length} slot`);
+  console.log('\n✅ Seed dokter v3 selesai.');
+}
+
 main().catch((e) => {
   console.error("❌ Seed gagal:", e);
   process.exit(1);
