@@ -96,6 +96,9 @@ async function main() {
     // ── Masterdata V2 ──────────────────────────────────────
     await seedMasterdataV2(prisma);
 
+    // ── Dokter V3 ──────────────────────────────────────────
+    await seedDokterV3(prisma);
+
     // ── Pasien ─────────────────────────────────────────────
     await seedPasien(prisma);
 
