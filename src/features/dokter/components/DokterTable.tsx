@@ -5,9 +5,10 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import { Badge }          from '@/components/ui/badge';
-import { Button }         from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { SIPStatusBadge } from './SIPStatusBadge';
 import { Eye, Stethoscope } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface DokterRow {
   id:             string;
