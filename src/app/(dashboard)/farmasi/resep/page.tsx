@@ -1,10 +1,5 @@
-import { UnderDevelopment } from "@/components/ui/under-development";
+import { FarmasiDashboard } from '@/features/farmasi/components/FarmasiDashboard';
 
 export default function ResepPage() {
-  return (
-    <UnderDevelopment
-      title="Resep Elektronik"
-      description="Modul validasi resep, dispensing, dan riwayat resep pasien akan segera tersedia."
-    />
-  );
+  return <FarmasiDashboard />;
 }
