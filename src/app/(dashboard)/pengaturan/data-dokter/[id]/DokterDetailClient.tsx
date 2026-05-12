@@ -26,10 +26,7 @@ export function DokterDetailClient({ id }: Props) {
 
   useEffect(() => {
     if (dokter?.user?.nama) {
-      setSegments([
-        { label: 'Data Dokter', href: '/pengaturan/data-dokter' },
-        { label: dokter.user.nama },
-      ]);
+      setSegments([{ label: dokter.user.nama }]);
     }
     return () => setSegments([]);
   }, [dokter?.user?.nama, setSegments]);
