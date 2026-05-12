@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { jadwalPraktekSchema } from '../schemas/dokter.schema';
 
-type JadwalFormInput = z.input<typeof jadwalPraktekSchema>;
+type JadwalFormInput  = z.input<typeof jadwalPraktekSchema>;
 type JadwalFormOutput = z.output<typeof jadwalPraktekSchema>;
 import {
   Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
