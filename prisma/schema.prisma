@@ -502,11 +502,18 @@ model RawatInap {
 model Obat {
   id          String    @id @default(cuid())
   kode        String    @unique
+  barcode     String?
   nama        String
   generik     String?
-  satuan      String
+  jenisBarang String    @default("OBAT")   // OBAT | ALKES
+  satuan      String                        // satuanKecil — untuk resep/pasien
+  satuanBesar String?                       // untuk penerimaan barang
+  isPaten     Boolean   @default(false)
   stok        Int       @default(0)
-  harga       Float
+  minStock    Int       @default(0)
+  maxStock    Int?
+  harga       Float                         // harga umum
+  hargaBPJS   Float?
   hargaBeli   Float?
   kategori    String?
   isActive    Boolean   @default(true)
