@@ -169,11 +169,14 @@ export function useUpdateJadwal(dokterProfileId: string) {
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(data),
       });
+
+      let body: Record<string, unknown> | null = null;
+      try { body = await res.json(); } catch { /* empty body */ }
+
       if (!res.ok) {
-        const e = await res.json();
-        throw new Error(e.error ?? 'Gagal memperbarui jadwal');
+        throw new Error((body as { error?: string })?.error ?? 'Gagal memperbarui jadwal');
       }
-      return res.json();
+      return body;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
