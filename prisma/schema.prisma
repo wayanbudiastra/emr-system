@@ -241,6 +241,7 @@ model DokterProfile {
   sharingFee    SharingFee[]
   kunjungan     Kunjungan[]
   resep         Resep[]
+  appointments  Appointment[]
 
   @@map("dokter_profile")
 }
