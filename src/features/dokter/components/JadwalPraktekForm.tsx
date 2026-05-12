@@ -44,7 +44,15 @@ export function JadwalPraktekForm({ dokterProfileId, dokterPoliList, onSuccess }
 
   const form = useForm<JadwalFormInput, unknown, JadwalFormOutput>({
     resolver: zodResolver(jadwalPraktekSchema) as never,
-    defaultValues: { kuotaPasien: 20, isAktif: true },
+    defaultValues: {
+      dokterPoliId: '',
+      hari:         undefined,
+      jamMulai:     '',
+      jamSelesai:   '',
+      kuotaPasien:  20,
+      keterangan:   '',
+      isAktif:      true,
+    },
   });
 
   const handleSubmit = (data: JadwalFormOutput) => {
