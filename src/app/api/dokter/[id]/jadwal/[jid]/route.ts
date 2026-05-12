@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { dokterService } from '@/services/dokter.service';
-import { jadwalPraktekSchema } from '@/features/dokter/schemas/dokter.schema';
+import { updateJadwalSchema } from '@/features/dokter/schemas/dokter.schema';
 
 export async function PUT(
   req: NextRequest,
