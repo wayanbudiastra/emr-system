@@ -375,7 +375,7 @@ export function ModuleSOAP({ kunjunganId, asesmen, existingSoap }: {
               Catatan Asesmen / Progress Note
             </Label>
             <textarea
-              className="w-full min-h-[100px] rounded-md border px-3 py-2 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full min-h-25 rounded-md border px-3 py-2 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
               placeholder="Penjelasan klinis, masalah yang teridentifikasi, perkembangan kondisi pasien..."
               value={asesmenTeks ?? ''}
               onChange={e => setAsesmenTeks(e.target.value)}
