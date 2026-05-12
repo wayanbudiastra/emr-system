@@ -57,9 +57,11 @@ export const rolePermissions: Record<string, Permissions> = {
   },
 
   ADMISSION: {
-    pasien:    ["create", "read", "update"],
-    kunjungan: ["create", "read", "update"],
-    antrean:   ["create", "read", "update"],
+    pasien:          ["create", "read", "update"],
+    kunjungan:       ["create", "read", "update"],
+    antrean:         ["create", "read", "update"],
+    "dokter:profil": ["read"],
+    "dokter:jadwal": ["read"],
   },
 
   KASIR: {
