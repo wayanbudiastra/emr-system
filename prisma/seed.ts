@@ -64,16 +64,7 @@ async function main() {
     }
     console.log("✓ Users (6)");
 
-    // ── Profil Dokter ──────────────────────────────────────
-    const dokterUser = await prisma.user.findUnique({ where: { email: "dokter@emr.local" } });
-    if (dokterUser) {
-      await prisma.dokter.upsert({
-        where: { userId: dokterUser.id },
-        update: {},
-        create: { userId: dokterUser.id, sip: "SIP-DKT-001", spesialisasi: "Umum", poliId: poliUmum.id },
-      });
-    }
-    console.log("✓ Profil Dokter");
+    // Profil Dokter V3 akan di-seed lewat seedDokterV3() setelah seedMasterdataV2
 
     // ── Kamar ──────────────────────────────────────────────
     for (const k of [
