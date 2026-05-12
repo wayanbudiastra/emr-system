@@ -42,12 +42,12 @@ interface Props {
 export function JadwalPraktekForm({ dokterProfileId, dokterPoliList, onSuccess }: Props) {
   const { mutate: create, isPending } = useCreateJadwal(dokterProfileId);
 
-  const form = useForm<JadwalPraktekValues>({
-    resolver: zodResolver(jadwalPraktekSchema),
+  const form = useForm<JadwalFormInput, unknown, JadwalFormOutput>({
+    resolver: zodResolver(jadwalPraktekSchema) as never,
     defaultValues: { kuotaPasien: 20, isAktif: true },
   });
 
-  const handleSubmit = (data: JadwalPraktekValues) => {
+  const handleSubmit = (data: JadwalFormOutput) => {
     create(data, { onSuccess: () => { form.reset(); onSuccess?.(); } });
   };
 
