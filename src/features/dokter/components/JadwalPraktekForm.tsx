@@ -48,7 +48,8 @@ export function JadwalPraktekForm({ dokterProfileId, dokterPoliList, onSuccess }
   });
 
   const handleSubmit = (data: JadwalFormOutput) => {
-    create(data, { onSuccess: () => { form.reset(); onSuccess?.(); } });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    create(data as any, { onSuccess: () => { form.reset(); onSuccess?.(); } });
   };
 
   return (
