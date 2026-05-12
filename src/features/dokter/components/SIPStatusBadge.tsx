@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { ShieldCheck, ShieldAlert, ShieldX, Shield } from 'lucide-react';
-import { getSIPStatus } from '@/services/dokter.service';
+import { getSIPStatus } from '../utils/sip-status';
 
 interface Props { tglExpired?: Date | string | null }
 
