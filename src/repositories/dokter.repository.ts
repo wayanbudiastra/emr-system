@@ -163,7 +163,7 @@ export const dokterRepository = {
     return prisma.jadwalPraktek.create({ data: { ...data, hari: data.hari as HariKerja } });
   },
 
-  async updateJadwal(id: string, data: Partial<JadwalPraktekValues>) {
+  async updateJadwal(id: string, data: UpdateJadwalValues) {
     const prisma = await getPrisma();
     const updateData = { ...data } as Record<string, unknown>;
     if (data.hari) updateData.hari = data.hari as HariKerja;
