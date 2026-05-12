@@ -116,8 +116,8 @@ function UserFormDialog({
   const mutation = useMutation({
     mutationFn: () =>
       isEdit
-        ? updateUser(user!.id, { nama: form.nama, role: form.role, nip: form.nip || undefined, telepon: form.telepon || undefined, sip: form.sip || undefined, spesialisasi: form.spesialisasi || undefined })
-        : createUser({ ...form, nip: form.nip || undefined, telepon: form.telepon || undefined, sip: form.sip || undefined, spesialisasi: form.spesialisasi || undefined } as Record<string, string>),
+        ? updateUser(user!.id, { nama: form.nama, role: form.role, nip: form.nip || undefined, telepon: form.telepon || undefined, noSIP: form.noSIP || undefined, spesialisasi: form.spesialisasi || undefined })
+        : createUser({ ...form, nip: form.nip || undefined, telepon: form.telepon || undefined, noSIP: form.noSIP || undefined, spesialisasi: form.spesialisasi || undefined } as Record<string, string>),
     onSuccess: () => { toast.success(isEdit ? "User diperbarui" : "User dibuat"); onSuccess(); onClose(); },
     onError: (e: Error) => toast.error(e.message),
   });
