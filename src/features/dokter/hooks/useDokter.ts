@@ -160,6 +160,29 @@ export function useCreateJadwal(dokterProfileId: string) {
   });
 }
 
+export function useUpdateJadwal(dokterProfileId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ jadwalId, data }: { jadwalId: string; data: Partial<JadwalPraktekValues> }) => {
+      const res = await fetch(`/api/dokter/${dokterProfileId}/jadwal/${jadwalId}`, {
+        method:  'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const e = await res.json();
+        throw new Error(e.error ?? 'Gagal memperbarui jadwal');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
+      toast.success('Jadwal berhasil diperbarui');
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
 export function useToggleJadwal(dokterProfileId: string) {
   const qc = useQueryClient();
   return useMutation({
