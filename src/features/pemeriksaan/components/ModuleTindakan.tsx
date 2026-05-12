@@ -264,7 +264,6 @@ function MonitoringTable({
           <TableHead>Jam</TableHead>
           <TableHead>Item</TableHead>
           <TableHead>Kategori</TableHead>
-          <TableHead>Pelaksana</TableHead>
           <TableHead>Qty</TableHead>
           <TableHead>Tarif</TableHead>
           <TableHead className="w-16" />
