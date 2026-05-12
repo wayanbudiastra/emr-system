@@ -50,6 +50,10 @@ export const rolePermissions: Record<string, Permissions> = {
     masterdata:         ["create", "read", "update", "delete"],
     pengaturan:         ["create", "read", "update", "delete"],
     auditLog:           ["read"],
+    "dokter:profil":    ["create", "read", "update", "delete"],
+    "dokter:mapping":   ["create", "read", "update", "delete"],
+    "dokter:fee":       ["create", "read", "update", "delete"],
+    "dokter:jadwal":    ["create", "read", "update", "delete"],
   },
 
   ADMISSION: {
