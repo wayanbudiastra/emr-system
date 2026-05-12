@@ -11,6 +11,7 @@ import {
   BarChart3,
   Settings,
   Activity,
+  UserRoundCheck,
   type LucideIcon,
 } from "lucide-react";
 
