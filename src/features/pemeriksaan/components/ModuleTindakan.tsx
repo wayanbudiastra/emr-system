@@ -449,7 +449,7 @@ export function ModuleTindakan({
   }, []);
 
   const addAlat = useCallback((item: PeralatanItem) => {
-    setCartAlat(p => [...p, { item, jumlah: 1, dipakaiOleh: '', catatan: '' }]);
+    setCartAlat(p => [...p, { item, jumlah: 1, catatan: '' }]);
   }, []);
 
   const updateTindakanCart = (id: string, field: keyof Omit<TindakanCart, 'item'>, val: string | number) =>
