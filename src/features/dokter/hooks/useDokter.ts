@@ -63,7 +63,7 @@ export function useSaveProfilDokter(userId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: dokterKeys.lists() });
       qc.invalidateQueries({ queryKey: dokterKeys.detail(userId) });
-      toast({ title: 'Profil dokter berhasil disimpan' });
+      toast.success('Profil dokter berhasil disimpan');
     },
     onError: (e: Error) => toast({ title: 'Gagal', description: e.message, variant: 'destructive' }),
   });
