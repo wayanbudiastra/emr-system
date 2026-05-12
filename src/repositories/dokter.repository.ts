@@ -1,6 +1,6 @@
 import { getPrisma } from '@/lib/prisma';
 import type { KategoriItem, HariKerja } from '@prisma/client';
-import type { DokterProfileValues, JadwalPraktekValues } from '@/features/dokter/schemas/dokter.schema';
+import type { DokterProfileValues, JadwalPraktekValues, UpdateJadwalValues } from '@/features/dokter/schemas/dokter.schema';
 
 export const dokterRepository = {
 
