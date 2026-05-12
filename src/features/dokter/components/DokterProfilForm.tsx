@@ -16,13 +16,13 @@ import { useSaveProfilDokter } from '../hooks/useDokter';
 
 interface Props {
   userId: string;
-  defaultValues?: Partial<DokterProfileValues & { tglExpiredSIP: Date | string | null }>;
+  defaultValues?: Partial<DokterProfileFormValues & { tglExpiredSIP: Date | string | null }>;
 }
 
 export function DokterProfilForm({ userId, defaultValues }: Props) {
   const { mutate: save, isPending } = useSaveProfilDokter(userId);
 
-  const form = useForm<DokterProfileValues>({
+  const form = useForm<DokterProfileFormValues>({
     resolver: zodResolver(dokterProfileSchema),
     defaultValues: {
       nik:           defaultValues?.nik          ?? '',
