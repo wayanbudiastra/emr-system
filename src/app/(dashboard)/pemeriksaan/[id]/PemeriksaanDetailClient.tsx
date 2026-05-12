@@ -18,6 +18,7 @@ import { Label }   from '@/components/ui/label';
 import { cn }      from '@/lib/utils';
 import { useBreadcrumb } from '@/contexts/breadcrumb';
 import { useEffect } from 'react';
+import { ModulePenunjang } from '@/features/pemeriksaan/components/ModulePenunjang';
 
 // ── Types ──────────────────────────────────────────────────────
 type Kunjungan = {
