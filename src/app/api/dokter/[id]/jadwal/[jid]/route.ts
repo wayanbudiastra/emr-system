@@ -13,7 +13,7 @@ export async function PUT(
 
   const { jid } = await params;
   const body     = await req.json();
-  const parsed   = jadwalPraktekSchema.partial().safeParse(body);
+  const parsed   = updateJadwalSchema.safeParse(body);
 
   if (!parsed.success) {
     return NextResponse.json({ error: 'Validasi gagal', details: parsed.error.flatten() }, { status: 400 });
