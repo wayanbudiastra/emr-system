@@ -313,7 +313,7 @@ export function ModuleSOAP({ kunjunganId, asesmen, existingSoap }: {
               CC + HPI (Chief Complaint & History of Present Illness)
             </Label>
             <textarea
-              className="w-full min-h-[120px] rounded-md border px-3 py-2 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full min-h-30 rounded-md border px-3 py-2 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
               placeholder="Keluhan utama dan riwayat penyakit sekarang..."
               value={subjektif ?? ''}
               onChange={e => setSubjektif(e.target.value)}
@@ -342,7 +342,7 @@ export function ModuleSOAP({ kunjunganId, asesmen, existingSoap }: {
               Pemeriksaan Fisik & Sistemik
             </Label>
             <textarea
-              className="w-full min-h-[120px] rounded-md border px-3 py-2 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full min-h-30 rounded-md border px-3 py-2 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
               placeholder="Hasil pemeriksaan fisik, status generalis, status lokalis..."
               value={objektif ?? ''}
               onChange={e => setObjektif(e.target.value)}
@@ -404,7 +404,7 @@ export function ModuleSOAP({ kunjunganId, asesmen, existingSoap }: {
               Advice / Instruksi & Rencana Selanjutnya
             </Label>
             <textarea
-              className="w-full min-h-[120px] rounded-md border px-3 py-2 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full min-h-30 rounded-md border px-3 py-2 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
               placeholder="Saran medis, instruksi tindak lanjut, kontrol ulang, edukasi pasien..."
               value={plan ?? ''}
               onChange={e => setPlan(e.target.value)}
