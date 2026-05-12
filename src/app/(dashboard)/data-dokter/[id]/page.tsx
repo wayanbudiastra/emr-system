@@ -4,7 +4,7 @@ import { use }            from 'react';
 import Link               from 'next/link';
 import { useQuery }       from '@tanstack/react-query';
 import { ArrowLeft, UserRoundCheck } from 'lucide-react';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { cn }             from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
