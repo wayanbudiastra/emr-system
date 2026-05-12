@@ -170,7 +170,7 @@ function UserFormDialog({
               <>
                 <div className="space-y-1">
                   <Label>SIP *</Label>
-                  <Input value={form.sip} onChange={(e) => set("sip", e.target.value)} placeholder="Nomor SIP" />
+                  <Input value={form.noSIP} onChange={(e) => set("noSIP", e.target.value)} placeholder="Nomor SIP" />
                 </div>
                 <div className="space-y-1">
                   <Label>Spesialisasi</Label>
