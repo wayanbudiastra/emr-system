@@ -20,6 +20,7 @@ import { useBreadcrumb } from '@/contexts/breadcrumb';
 import { useEffect } from 'react';
 import { ModulePenunjang } from '@/features/pemeriksaan/components/ModulePenunjang';
 import { ModuleTindakan }  from '@/features/pemeriksaan/components/ModuleTindakan';
+import { ModuleSOAP }      from '@/features/pemeriksaan/components/ModuleSOAP';
 
 // ── Types ──────────────────────────────────────────────────────
 type Kunjungan = {
