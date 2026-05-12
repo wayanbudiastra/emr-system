@@ -280,36 +280,6 @@ function ModuleAsesmen({ kunjunganId, asesmen: initialAsesmen }: {
   );
 }
 
-// ── Module: SOAP Preview ───────────────────────────────────────
-function ModuleSOAP({ soap }: { soap: Kunjungan['soap'] }) {
-  if (!soap) {
-    return (
-      <div className="text-center py-10 text-muted-foreground">
-        <FileText className="mx-auto h-8 w-8 mb-2 opacity-30" />
-        <p className="text-sm">Belum ada catatan SOAP dari dokter</p>
-      </div>
-    );
-  }
-  return (
-    <div className="space-y-4">
-      <h3 className="font-semibold">SOAP Note</h3>
-      {[
-        { label: 'S — Subjektif',  value: soap.subjektif },
-        { label: 'O — Objektif',   value: soap.objektif },
-        { label: 'A — Asesmen',    value: soap.asesmen },
-        { label: 'P — Plan',       value: soap.plan },
-      ].map(({ label, value }) => (
-        <div key={label}>
-          <p className="text-xs text-muted-foreground font-medium mb-1">{label}</p>
-          <div className="rounded-md bg-muted/50 px-3 py-2 text-sm min-h-[40px]">
-            {value ?? <span className="text-muted-foreground italic">Belum diisi</span>}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 // ── Coming Soon Placeholder ────────────────────────────────────
 function ComingSoon({ label }: { label: string }) {
   return (
