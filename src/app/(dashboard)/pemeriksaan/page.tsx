@@ -191,6 +191,10 @@ export default function PemeriksaanPage() {
   const [tanggal]                     = useState(TODAY);
   const [displayDate, setDisplayDate] = useState('');
 
+  useEffect(() => {
+    setDisplayDate(format(new Date(), 'EEEE, dd MMMM yyyy', { locale: idLocale }));
+  }, []);
+
   const { data: allData, isLoading } = useQuery({
     queryKey: ['pemeriksaan-list', tanggal],
     queryFn: async () => {
