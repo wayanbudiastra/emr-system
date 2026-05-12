@@ -330,19 +330,7 @@ export default function DashboardLayout({
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
-              <Link href="/dashboard" className="hover:text-foreground transition-colors">
-                Dashboard
-              </Link>
-              {pathname !== "/dashboard" && (
-                <>
-                  <span>/</span>
-                  <span className="text-foreground font-medium capitalize">
-                    {pathname.split("/").filter(Boolean).pop()?.replace(/-/g, " ")}
-                  </span>
-                </>
-              )}
-            </div>
+            <Breadcrumb />
           </div>
 
           {/* Right: Actions */}
