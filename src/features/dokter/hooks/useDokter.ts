@@ -191,7 +191,7 @@ export function useDeleteJadwal(dokterProfileId: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: dokterKeys.detail(dokterProfileId) });
-      toast({ title: 'Jadwal berhasil dihapus' });
+      toast.success('Jadwal berhasil dihapus');
     },
     onError: (e: Error) => toast.error(e.message),
   });
