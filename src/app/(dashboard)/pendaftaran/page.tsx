@@ -104,7 +104,7 @@ type JadwalItem = {
 };
 
 // ── Tab 1: Appointment ────────────────────────────────────────
-function TabAppointment() {
+function TabAppointment({ onRegistrasi }: { onRegistrasi: (kode: string) => void }) {
   const [tanggal, setTanggal]           = useState(TODAY);
   const [spesialisasi, setSpesialisasi] = useState('');
   const [searchAppt, setSearchAppt]    = useState('');
