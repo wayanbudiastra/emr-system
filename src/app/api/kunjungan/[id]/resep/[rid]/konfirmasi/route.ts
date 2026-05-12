@@ -104,8 +104,6 @@ export async function PATCH(
         return s + h * b.jumlah;
       }, 0);
 
-    void totalObat; // not used, replaced by totalResep
-
     // Execute in transaction: deduct stok + confirm resep + upsert billing
     await prisma.$transaction(async (tx) => {
       // Deduct stok
