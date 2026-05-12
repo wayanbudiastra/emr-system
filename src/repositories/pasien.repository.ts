@@ -59,7 +59,7 @@ export const pasienRepository = {
           select: {
             id: true, nomorAntrean: true, tanggal: true, status: true,
             poli:   { select: { nama: true } },
-            dokter: { select: { user: { select: { nama: true } } } },
+            dokterProfile: { select: { user: { select: { nama: true } } } },
           },
         },
       },
