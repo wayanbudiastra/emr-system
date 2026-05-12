@@ -67,7 +67,32 @@ export const jadwalPraktekSchema = z
     }
   });
 
+export const updateJadwalSchema = z
+  .object({
+    hari:        z.enum(['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU', 'MINGGU']).optional(),
+    jamMulai:    z.string().regex(rJam, 'Format jam tidak valid (HH:MM)').optional(),
+    jamSelesai:  z.string().regex(rJam, 'Format jam tidak valid (HH:MM)').optional(),
+    kuotaPasien: z.number().int().min(1).max(200).optional(),
+    keterangan:  z.string().max(200).optional().nullable(),
+    isAktif:     z.boolean().optional(),
+    dokterPoliId: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.jamMulai && data.jamSelesai) {
+      const [hM, mM] = data.jamMulai.split(':').map(Number);
+      const [hS, mS] = data.jamSelesai.split(':').map(Number);
+      if (hS * 60 + mS <= hM * 60 + mM) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['jamSelesai'],
+          message: 'Jam selesai harus setelah jam mulai',
+        });
+      }
+    }
+  });
+
 export type DokterProfileValues  = z.infer<typeof dokterProfileSchema>;
 export type MappingPoliValues    = z.infer<typeof mappingPoliSchema>;
 export type SharingFeeFormValues = z.infer<typeof sharingFeeSchema>;
 export type JadwalPraktekValues  = z.output<typeof jadwalPraktekSchema>;
+export type UpdateJadwalValues   = z.infer<typeof updateJadwalSchema>;
