@@ -1,6 +1,4 @@
-import type { Role } from "@prisma/client";
-
-export type { Role };
+export type { Role } from "@/types/role";
 
 export interface UserRow {
   id: string;
