@@ -1,4 +1,5 @@
-export type { Role } from "@/types/role";
+import type { Role } from "@/types/role";
+export type { Role };
 
 export interface UserRow {
   id: string;
