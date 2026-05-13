@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Role } from "@/types/role";
 
 export type Action = "create" | "read" | "update" | "delete" | "read:own";
 
