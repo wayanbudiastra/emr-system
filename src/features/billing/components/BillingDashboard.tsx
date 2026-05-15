@@ -388,7 +388,7 @@ function DiskonDialog({ billing, onClose }: { billing: Billing; onClose: () => v
       <div className="space-y-4 py-2">
         <div className="space-y-1">
           <Label>Jenis Diskon</Label>
-          <Select value={tipeDiskon} onValueChange={v => { setTipeDiskon(v as 'nominal' | 'persen'); setNilai(''); }}>
+          <Select value={tipeDiskon} onValueChange={v => { if (v) { setTipeDiskon(v as 'nominal' | 'persen'); setNilai(''); } }}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="nominal">Nominal (Rp)</SelectItem>
