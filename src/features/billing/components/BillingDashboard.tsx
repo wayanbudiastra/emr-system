@@ -800,7 +800,7 @@ function BillingDetail({
                         ) : (
                           <span
                             className={`${item.diskonItem > 0 ? 'text-red-600' : 'text-muted-foreground'} cursor-pointer hover:underline`}
-                            onClick={() => { if (!isLocked && !item.isObat) { setDiskonItemId(item.id); setDiskonItemVal(String(item.diskonItem)); }}}
+                            onClick={() => { if (!isLocked && !item.isObat) setDiskonItemId(item.id); }}
                           >
                             {item.diskonItem > 0 ? `- ${formatRupiah(item.diskonItem)}` : '—'}
                           </span>
