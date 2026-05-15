@@ -600,6 +600,45 @@ function PaymentDialog({
   );
 }
 
+// ── Riwayat Pembayaran (collapsible) ───────────────────────────
+function RiwayatPembayaran({ pembayaran }: { pembayaran: Pembayaran[] }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <Button
+        variant="ghost" size="sm"
+        className="gap-1.5 text-xs w-full justify-start"
+        onClick={() => setOpen(o => !o)}
+      >
+        {open ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+        Riwayat Pembayaran ({pembayaran.length})
+      </Button>
+      {open && (
+        <div className="border rounded-md divide-y text-sm mt-1">
+          {pembayaran.map(p => (
+            <div key={p.id} className="flex items-center justify-between px-3 py-2">
+              <div>
+                <p className="font-medium">{METODE_LABELS[p.metode] ?? p.metode}</p>
+                <p className="text-xs text-muted-foreground">
+                  {p.namaBank && `${p.namaBank} · `}
+                  {p.referensi && `Ref: ${p.referensi} · `}
+                  {format(new Date(p.tanggal), 'dd/MM HH:mm')}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="font-semibold">{formatRupiah(p.jumlah)}</p>
+                {p.kembalian !== null && p.kembalian > 0 && (
+                  <p className="text-xs text-green-700">Kembali: {formatRupiah(p.kembalian)}</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Billing Detail ──────────────────────────────────────────────
 function BillingDetail({
   billing,
