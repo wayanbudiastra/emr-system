@@ -1,10 +1,5 @@
-import { UnderDevelopment } from "@/components/ui/under-development";
+import { BillingDashboard } from '@/features/billing/components/BillingDashboard';
 
 export default function BillingPage() {
-  return (
-    <UnderDevelopment
-      title="Billing & Pembayaran"
-      description="Modul tagihan, proses pembayaran, cetak invoice, dan rekap pendapatan akan segera tersedia."
-    />
-  );
+  return <BillingDashboard />;
 }
