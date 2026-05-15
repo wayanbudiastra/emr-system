@@ -100,6 +100,21 @@ enum MetodePembayaran {
   KARTU_KREDIT
 }
 
+enum StatusShift {
+  OPEN
+  CLOSED
+}
+
+enum KategoriItemBilling {
+  REGISTRASI
+  TINDAKAN
+  LAB
+  RADIOLOGI
+  PERALATAN
+  FARMASI
+  ADMINISTRASI
+}
+
 enum KategoriItem {
   TINDAKAN
   LAB
