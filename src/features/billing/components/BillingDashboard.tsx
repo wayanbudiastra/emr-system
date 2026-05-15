@@ -825,36 +825,7 @@ function BillingDetail({
 
       {/* Riwayat Pembayaran */}
       {billing.pembayaran.length > 0 && (
-        <Collapsible>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm" className="gap-1.5 text-xs w-full justify-start">
-              <ChevronDown className="h-3.5 w-3.5" />
-              Riwayat Pembayaran ({billing.pembayaran.length})
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <div className="border rounded-md divide-y text-sm mt-1">
-              {billing.pembayaran.map(p => (
-                <div key={p.id} className="flex items-center justify-between px-3 py-2">
-                  <div>
-                    <p className="font-medium">{METODE_LABELS[p.metode] ?? p.metode}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {p.namaBank && `${p.namaBank} · `}
-                      {p.referensi && `Ref: ${p.referensi} · `}
-                      {format(new Date(p.tanggal), 'dd/MM HH:mm')}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold">{formatRupiah(p.jumlah)}</p>
-                    {p.kembalian !== null && p.kembalian > 0 && (
-                      <p className="text-xs text-green-700">Kembali: {formatRupiah(p.kembalian)}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
+        <RiwayatPembayaran pembayaran={billing.pembayaran} />
       )}
 
       {/* Action Buttons */}
