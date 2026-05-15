@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { differenceInYears, format } from 'date-fns';
 import {
   Search, Lock, Unlock, CreditCard, Banknote, ShieldCheck,
   Plus, Trash2, RefreshCw, Receipt, AlertTriangle, CheckCircle2,
-  User, Building2, X, Percent, ChevronDown,
+  User, Building2, X, Percent, ChevronDown, ChevronUp,
 } from 'lucide-react';
 import { Input }    from '@/components/ui/input';
 import { Button }   from '@/components/ui/button';
@@ -24,9 +24,6 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
 } from '@/components/ui/dialog';
-import {
-  Collapsible, CollapsibleContent, CollapsibleTrigger,
-} from '@/components/ui/collapsible';
 
 // ── Types ──────────────────────────────────────────────────────
 type ShiftKasir = {
