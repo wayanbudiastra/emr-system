@@ -525,7 +525,7 @@ function PaymentDialog({
         {/* Method */}
         <div className="space-y-1">
           <Label>Metode Pembayaran</Label>
-          <Select value={metode} onValueChange={setMetode}>
+          <Select value={metode} onValueChange={v => { if (v) setMetode(v); }}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="TUNAI"><span className="flex items-center gap-2"><Banknote className="h-4 w-4" />Tunai</span></SelectItem>
