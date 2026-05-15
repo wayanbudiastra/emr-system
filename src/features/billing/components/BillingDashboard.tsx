@@ -654,7 +654,6 @@ function BillingDetail({
   const [showDiskon,    setShowDiskon]    = useState(false);
   const [showPayment,   setShowPayment]   = useState(false);
   const [diskonItemId,  setDiskonItemId]  = useState<string | null>(null);
-  const [diskonItemVal, setDiskonItemVal] = useState('');
 
   const isLocked   = ['LUNAS', 'DIBATALKAN'].includes(billing.status);
   const pendingResep = billing.kunjungan.resep?.filter(r => ['MENUNGGU', 'DIPROSES'].includes(r.status)) ?? [];
