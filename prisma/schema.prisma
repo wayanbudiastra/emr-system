@@ -741,32 +741,78 @@ model Tindakan {
 // ──────────────────────────────────────────
 
 model Billing {
-  id           String        @id @default(cuid())
-  kunjunganId  String        @unique
-  nomorInvoice String        @unique
-  totalTagihan Float
-  totalBayar   Float         @default(0)
-  sisa         Float
-  status       StatusBilling @default(BELUM_BAYAR)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id            String        @id @default(cuid())
+  kunjunganId   String        @unique
+  nomorInvoice  String        @unique
+  totalTagihan  Float
+  totalBayar    Float         @default(0)
+  sisa          Float
+  diskonGlobal  Float         @default(0)
+  status        StatusBilling @default(BELUM_BAYAR)
+  cancelledById String?
+  cancelReason  String?       @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   kunjungan    Kunjungan     @relation(fields: [kunjunganId], references: [id])
   pembayaran   Pembayaran[]
+  items        BillingItem[]
+  cancelledBy  User?         @relation("BillingCancellation", fields: [cancelledById], references: [id])
 
   @@map("billing")
 }
 
-model Pembayaran {
-  id        String           @id @default(cuid())
-  billingId String
-  jumlah    Float
-  metode    MetodePembayaran
-  referensi String?
-  tanggal   DateTime         @default(now())
-  createdAt DateTime         @default(now())
+model BillingItem {
+  id          String              @id @default(cuid())
+  billingId   String
+  kategori    KategoriItemBilling
+  namaItem    String
+  jumlah      Int                 @default(1)
+  hargaSatuan Float
+  diskonItem  Float               @default(0)
+  isObat      Boolean             @default(false)
+  refId       String?
+  createdAt   DateTime            @default(now())
 
-  billing   Billing          @relation(fields: [billingId], references: [id])
+  billing     Billing             @relation(fields: [billingId], references: [id], onDelete: Cascade)
+
+  @@map("billing_item")
+}
+
+model ShiftKasir {
+  id             String      @id @default(cuid())
+  kasirId        String
+  modalAwal      Float
+  uangFisikAkhir Float?
+  status         StatusShift @default(OPEN)
+  openAt         DateTime    @default(now())
+  closeAt        DateTime?
+  catatan        String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  kasir      User         @relation(fields: [kasirId], references: [id])
+  pembayaran Pembayaran[]
+
+  @@map("shift_kasir")
+}
+
+model Pembayaran {
+  id            String           @id @default(cuid())
+  billingId     String
+  shiftId       String?
+  jumlah        Float
+  metode        MetodePembayaran
+  namaBank      String?
+  tipeKartu     String?
+  referensi     String?
+  jumlahDibayar Float?
+  kembalian     Float?
+  tanggal       DateTime         @default(now())
+  createdAt     DateTime         @default(now())
+
+  billing Billing     @relation(fields: [billingId], references: [id])
+  shift   ShiftKasir? @relation(fields: [shiftId], references: [id])
 
   @@map("pembayaran")
 }
