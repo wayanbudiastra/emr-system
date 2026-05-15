@@ -177,10 +177,12 @@ model User {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
-  dokterProfile DokterProfile?
-  perawat       Perawat?
-  sessions      Session[]
-  activityLogs  ActivityLog[]
+  dokterProfile    DokterProfile?
+  perawat          Perawat?
+  sessions         Session[]
+  activityLogs     ActivityLog[]
+  shiftKasir       ShiftKasir[]
+  billingCancelled Billing[]     @relation("BillingCancellation")
 
   @@map("users")
 }
