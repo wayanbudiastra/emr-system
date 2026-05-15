@@ -651,7 +651,7 @@ function BillingDetail({
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const STATUS_BADGE: Record<string, JSX.Element> = {
+  const STATUS_BADGE: Record<string, React.ReactElement> = {
     BELUM_BAYAR: <Badge variant="outline" className="text-yellow-700 border-yellow-300 bg-yellow-50">Belum Bayar</Badge>,
     SEBAGIAN:    <Badge variant="outline" className="text-blue-700 border-blue-300 bg-blue-50">Sebagian</Badge>,
     LUNAS:       <Badge variant="outline" className="text-green-700 border-green-300 bg-green-50">Lunas</Badge>,
