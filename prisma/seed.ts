@@ -7,8 +7,6 @@ import { prisma } from "../src/lib/prisma";
 
 async function main() {
   console.log("Seeding database...");
-  const prisma = await createPrismaClient(process.env.DATABASE_URL!);
-
   try {
     // ── Klinik ─────────────────────────────────────────────
     await prisma.klinik.upsert({
