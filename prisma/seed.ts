@@ -1,9 +1,9 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { Role } from "@prisma/client";
+import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { createPrismaClient } from "../src/lib/db";
+import { prisma } from "../src/lib/prisma";
 
 async function main() {
   console.log("Seeding database...");
