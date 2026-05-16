@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { authConfig } from "@/lib/auth.config";
 import { NextResponse } from "next/server";
 import { hasRouteAccess } from "@/config/rbac.config";
-import type { Role } from "@prisma/client";
+import type { Role } from "@/types/role";
 
 const { auth } = NextAuth(authConfig);
 
