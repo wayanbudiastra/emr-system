@@ -1,3 +1,4 @@
+import 'server-only';
 import dns from "dns";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
