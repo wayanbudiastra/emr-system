@@ -108,7 +108,7 @@ async function main() {
   }
 }
 
-async function seedMasterdataV2(prisma: Awaited<ReturnType<typeof import("../src/lib/db").createPrismaClient>>) {
+async function seedMasterdataV2(prisma: PrismaClient) {
   // Poli
   const poliData = [
     { nama: "Poli Umum",      kode: "PU",  lantai: "Lantai 1" },
