@@ -843,12 +843,17 @@ function BillingDetail({
   onBack:   () => void;
 }) {
   const qc = useQueryClient();
+  const { data: session } = useSession();
+  const isSuperAdmin = session?.user?.role === 'SUPER_ADMIN';
+
   const [showAddItem,   setShowAddItem]   = useState(false);
   const [showDiskon,    setShowDiskon]    = useState(false);
   const [showPayment,   setShowPayment]   = useState(false);
+  const [showCancel,    setShowCancel]    = useState(false);
   const [diskonItemId,  setDiskonItemId]  = useState<string | null>(null);
 
-  const isLocked   = ['LUNAS', 'DIBATALKAN'].includes(billing.status);
+  const isLocked    = ['LUNAS', 'DIBATALKAN'].includes(billing.status);
+  const isLunas     = billing.status === 'LUNAS';
   const pendingResep = billing.kunjungan.resep?.filter(r => ['MENUNGGU', 'DIPROSES'].includes(r.status)) ?? [];
   const usia = differenceInYears(new Date(), new Date(billing.kunjungan.pasien.tanggalLahir));
 
