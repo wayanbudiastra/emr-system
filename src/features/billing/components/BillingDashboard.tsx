@@ -121,6 +121,130 @@ const KATEGORI_COLORS: Record<string, string> = {
   REGISTRASI:  'bg-yellow-50 text-yellow-700',
 };
 
+// ── Cetak Invoice ──────────────────────────────────────────────
+function cetakInvoice(billing: Billing) {
+  const appName = process.env.NEXT_PUBLIC_APP_NAME ?? 'EMR System';
+  const usia = differenceInYears(new Date(), new Date(billing.kunjungan.pasien.tanggalLahir));
+
+  const itemRows = billing.items.map(item => {
+    const subtotal = item.jumlah * item.hargaSatuan - item.diskonItem;
+    return `<tr>
+      <td>${item.namaItem}</td>
+      <td style="text-align:center">${item.jumlah}</td>
+      <td style="text-align:right">${formatRupiah(item.hargaSatuan)}</td>
+      <td style="text-align:right">${item.diskonItem > 0 ? `(${formatRupiah(item.diskonItem)})` : '-'}</td>
+      <td style="text-align:right">${formatRupiah(subtotal)}</td>
+    </tr>`;
+  }).join('');
+
+  const payRows = billing.pembayaran.map(p => `<tr>
+    <td>${format(new Date(p.tanggal), 'dd/MM/yyyy HH:mm')}</td>
+    <td>${METODE_LABELS[p.metode] ?? p.metode}</td>
+    <td style="text-align:right">${formatRupiah(p.jumlah)}</td>
+    ${p.kembalian != null ? `<td style="text-align:right">${formatRupiah(p.kembalian)}</td>` : '<td>-</td>'}
+  </tr>`).join('');
+
+  const stamp = billing.status === 'LUNAS'
+    ? `<div style="position:absolute;top:38%;left:25%;width:50%;text-align:center;border:5px solid #16a34a;color:#16a34a;font-size:2.5rem;font-weight:900;padding:12px;opacity:0.25;transform:rotate(-20deg);pointer-events:none">LUNAS</div>`
+    : billing.status === 'DIBATALKAN'
+    ? `<div style="position:absolute;top:38%;left:20%;width:60%;text-align:center;border:5px solid #dc2626;color:#dc2626;font-size:2rem;font-weight:900;padding:12px;opacity:0.25;transform:rotate(-20deg);pointer-events:none">DIBATALKAN</div>`
+    : '';
+
+  const subtotalItems = billing.totalTagihan + billing.diskonGlobal;
+
+  const html = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice ${billing.nomorInvoice}</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Arial,sans-serif;font-size:11px;padding:24px;color:#111}
+    .header{text-align:center;border-bottom:2px solid #111;padding-bottom:10px;margin-bottom:14px}
+    .header h1{font-size:20px;font-weight:bold}
+    .header p{font-size:10px;color:#555;margin-top:2px}
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin-bottom:14px}
+    .info-row{display:flex;gap:4px;margin-bottom:2px}
+    .lbl{color:#555;min-width:90px;flex-shrink:0}
+    table{width:100%;border-collapse:collapse;margin-bottom:14px}
+    th{background:#f3f4f6;padding:6px 4px;text-align:left;border-bottom:1px solid #ccc;font-size:10px;font-weight:600}
+    td{padding:5px 4px;border-bottom:1px solid #eee;vertical-align:top}
+    .totals{margin-left:auto;width:48%}
+    .trow{display:flex;justify-content:space-between;padding:3px 0;font-size:11px}
+    .trow.grand{border-top:2px solid #111;font-weight:bold;font-size:13px;padding-top:6px;margin-top:4px}
+    .footer{margin-top:24px;text-align:center;font-size:10px;color:#888;border-top:1px solid #ddd;padding-top:10px}
+    .stamp-wrap{position:relative}
+    @media print{body{padding:10px}}
+  </style>
+</head>
+<body>
+  <div class="stamp-wrap">
+    ${stamp}
+    <div class="header">
+      <h1>${appName}</h1>
+      <p>Sistem Rekam Medis Elektronik</p>
+      <p style="font-size:13px;font-weight:bold;margin-top:8px">INVOICE / KUITANSI PEMBAYARAN</p>
+    </div>
+    <div class="info-grid">
+      <div>
+        <div class="info-row"><span class="lbl">No. Invoice</span><strong>${billing.nomorInvoice}</strong></div>
+        <div class="info-row"><span class="lbl">Tanggal</span><span>${format(new Date(billing.kunjungan.tanggal), 'dd MMMM yyyy')}</span></div>
+        <div class="info-row"><span class="lbl">Penjamin</span><span>${billing.kunjungan.penjamin ?? 'UMUM'}</span></div>
+        <div class="info-row"><span class="lbl">Status</span><strong>${billing.status === 'LUNAS' ? 'LUNAS' : billing.status === 'DIBATALKAN' ? 'DIBATALKAN' : 'BELUM LUNAS'}</strong></div>
+      </div>
+      <div>
+        <div class="info-row"><span class="lbl">No. RM</span><span>${billing.kunjungan.pasien.nomorRM}</span></div>
+        <div class="info-row"><span class="lbl">Nama Pasien</span><strong>${billing.kunjungan.pasien.nama}</strong></div>
+        <div class="info-row"><span class="lbl">Usia</span><span>${usia} tahun</span></div>
+        <div class="info-row"><span class="lbl">Poli</span><span>${billing.kunjungan.poli?.nama ?? '-'}</span></div>
+        <div class="info-row"><span class="lbl">Dokter</span><span>${billing.kunjungan.dokterProfile ? `dr. ${billing.kunjungan.dokterProfile.user.nama}` : '-'}</span></div>
+      </div>
+    </div>
+    <table>
+      <thead><tr>
+        <th>Nama Item</th>
+        <th style="text-align:center;width:36px">Qty</th>
+        <th style="text-align:right;width:110px">Harga Satuan</th>
+        <th style="text-align:right;width:90px">Diskon</th>
+        <th style="text-align:right;width:110px">Subtotal</th>
+      </tr></thead>
+      <tbody>${itemRows}</tbody>
+    </table>
+    <div class="totals">
+      <div class="trow"><span>Subtotal</span><span>${formatRupiah(subtotalItems)}</span></div>
+      ${billing.diskonGlobal > 0 ? `<div class="trow"><span>Diskon Invoice</span><span style="color:#dc2626">- ${formatRupiah(billing.diskonGlobal)}</span></div>` : ''}
+      <div class="trow grand"><span>Total Tagihan</span><span>${formatRupiah(billing.totalTagihan)}</span></div>
+      ${billing.totalBayar > 0 ? `<div class="trow" style="color:#16a34a"><span>Sudah Dibayar</span><span>${formatRupiah(billing.totalBayar)}</span></div>` : ''}
+      <div class="trow" style="font-weight:bold;color:${billing.sisa > 0 ? '#dc2626' : '#16a34a'}">
+        <span>Sisa Tagihan</span><span>${formatRupiah(billing.sisa)}</span>
+      </div>
+    </div>
+    ${billing.pembayaran.length > 0 ? `
+    <h2 style="font-size:12px;margin-top:18px;margin-bottom:6px">Riwayat Pembayaran</h2>
+    <table>
+      <thead><tr>
+        <th>Tanggal</th><th>Metode</th>
+        <th style="text-align:right">Jumlah Bayar</th>
+        <th style="text-align:right">Kembalian</th>
+      </tr></thead>
+      <tbody>${payRows}</tbody>
+    </table>` : ''}
+    <div class="footer">
+      <p>Dokumen ini dicetak secara elektronik dan sah tanpa tanda tangan basah</p>
+      <p>Dicetak pada: ${format(new Date(), 'dd MMMM yyyy HH:mm')}</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+  const win = window.open('', '_blank', 'width=820,height=700');
+  if (win) {
+    win.document.write(html);
+    win.document.close();
+    win.onload = () => win.print();
+  }
+}
+
 // ── Open Shift Dialog ──────────────────────────────────────────
 function OpenShiftDialog({ onClose }: { onClose: () => void }) {
   const qc = useQueryClient();
