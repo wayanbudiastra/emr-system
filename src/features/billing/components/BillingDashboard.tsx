@@ -610,6 +610,24 @@ function PaymentDialog({
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ['billing-detail'] });
       qc.invalidateQueries({ queryKey: ['billing-kunjungan'] });
+
+      // Cetak invoice otomatis setelah pembayaran berhasil
+      if (data.data) {
+        const billingForPrint: Billing = {
+          ...billing,
+          id:           data.data.id,
+          nomorInvoice: data.data.nomorInvoice,
+          status:       data.data.status,
+          totalTagihan: data.data.totalTagihan,
+          totalBayar:   data.data.totalBayar,
+          sisa:         data.data.sisa,
+          diskonGlobal: data.data.diskonGlobal,
+          items:        data.data.items,
+          pembayaran:   data.data.pembayaran,
+        };
+        cetakInvoice(billingForPrint);
+      }
+
       if (data.kembalian > 0) {
         toast.success(`Pembayaran berhasil. Kembalian: ${formatRupiah(data.kembalian)}`);
       } else {
