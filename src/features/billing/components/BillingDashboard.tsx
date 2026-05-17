@@ -766,6 +766,72 @@ function RiwayatPembayaran({ pembayaran }: { pembayaran: Pembayaran[] }) {
   );
 }
 
+// ── Cancel Billing Dialog ───────────────────────────────────────
+function CancelBillingDialog({ billing, onClose }: { billing: Billing; onClose: () => void }) {
+  const qc = useQueryClient();
+  const [reason, setReason] = useState('');
+
+  const { mutate: cancelBilling, isPending } = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/billing/${billing.id}/cancel`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ cancelReason: reason }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error ?? 'Gagal membatalkan billing');
+      return body;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['billing-detail'] });
+      qc.invalidateQueries({ queryKey: ['billing-kunjungan'] });
+      toast.success('Billing berhasil dibatalkan');
+      onClose();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2 text-destructive">
+          <Ban className="h-5 w-5" />
+          Batalkan Billing Lunas
+        </DialogTitle>
+        <DialogDescription>
+          Invoice <strong>{billing.nomorInvoice}</strong> sudah berstatus <strong>LUNAS</strong>.
+          Pembatalan akan mengubah status menjadi DIBATALKAN. Tindakan ini tidak dapat diundone.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="space-y-3 py-1">
+        <div className="space-y-1">
+          <Label>Alasan Pembatalan <span className="text-destructive">*</span></Label>
+          <Textarea
+            placeholder="Jelaskan alasan pembatalan billing yang sudah lunas ini..."
+            value={reason}
+            onChange={e => setReason(e.target.value)}
+            rows={3}
+            maxLength={500}
+          />
+          <p className="text-xs text-muted-foreground text-right">{reason.length}/500 (min. 5 karakter)</p>
+        </div>
+      </div>
+      <DialogFooter>
+        <Button variant="outline" onClick={onClose}>Batal</Button>
+        <Button
+          variant="destructive"
+          disabled={isPending || reason.trim().length < 5}
+          onClick={() => cancelBilling()}
+          className="gap-1.5"
+        >
+          <Ban className="h-4 w-4" />
+          {isPending ? 'Membatalkan...' : 'Konfirmasi Batalkan'}
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  );
+}
+
 // ── Billing Detail ──────────────────────────────────────────────
 function BillingDetail({
   billing,
