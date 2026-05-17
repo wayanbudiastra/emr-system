@@ -135,7 +135,7 @@ export function PasienForm({ mode = 'create', pasienId, defaultValues }: PasienF
           <FormField control={form.control} name="nama" render={({ field }) => (
             <FormItem>
               <FormLabel>Nama Lengkap <span className="text-destructive">*</span></FormLabel>
-              <FormControl><Input placeholder="Sesuai KTP / Paspor" {...field} /></FormControl>
+              <FormControl><Input placeholder="Sesuai KTP / Paspor" {...field} value={field.value ?? ''} /></FormControl>
               <FormMessage />
             </FormItem>
           )} />
