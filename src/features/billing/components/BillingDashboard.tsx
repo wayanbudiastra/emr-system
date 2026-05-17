@@ -1065,22 +1065,45 @@ function BillingDetail({
       )}
 
       {/* Action Buttons */}
-      {!isLocked && (
-        <div className="flex items-center gap-2 flex-wrap">
-          <Button variant="outline" className="gap-1.5" onClick={() => setShowDiskon(true)}>
-            <Percent className="h-4 w-4" />
-            Diskon Invoice
+      <div className="flex items-center gap-2 flex-wrap">
+        {/* Cetak Invoice — tampil untuk semua status kecuali belum ada item */}
+        {billing.items.length > 0 && billing.status !== 'BELUM_BAYAR' && (
+          <Button variant="outline" className="gap-1.5" onClick={() => cetakInvoice(billing)}>
+            <Printer className="h-4 w-4" />
+            Cetak Invoice
           </Button>
+        )}
+
+        {/* Cancel Billing untuk status LUNAS — hanya SUPER_ADMIN */}
+        {isLunas && isSuperAdmin && (
           <Button
-            className="flex-1 gap-1.5 bg-green-600 hover:bg-green-700 text-white"
-            disabled={billing.sisa <= 0 || pendingResep.length > 0}
-            onClick={() => setShowPayment(true)}
+            variant="outline"
+            className="gap-1.5 text-destructive border-destructive/40 hover:bg-destructive/5"
+            onClick={() => setShowCancel(true)}
           >
-            <Receipt className="h-4 w-4" />
-            Proses Pembayaran
+            <Ban className="h-4 w-4" />
+            Batalkan Billing
           </Button>
-        </div>
-      )}
+        )}
+
+        {/* Tombol pembayaran — hanya saat belum lunas */}
+        {!isLocked && (
+          <>
+            <Button variant="outline" className="gap-1.5" onClick={() => setShowDiskon(true)}>
+              <Percent className="h-4 w-4" />
+              Diskon Invoice
+            </Button>
+            <Button
+              className="flex-1 gap-1.5 bg-green-600 hover:bg-green-700 text-white"
+              disabled={billing.sisa <= 0 || pendingResep.length > 0}
+              onClick={() => setShowPayment(true)}
+            >
+              <Receipt className="h-4 w-4" />
+              Proses Pembayaran
+            </Button>
+          </>
+        )}
+      </div>
 
       {/* Dialogs */}
       {showAddItem && (
@@ -1096,6 +1119,11 @@ function BillingDetail({
       {showPayment && (
         <Dialog open onOpenChange={() => setShowPayment(false)}>
           <PaymentDialog billing={billing} shiftId={shiftId} onClose={() => setShowPayment(false)} />
+        </Dialog>
+      )}
+      {showCancel && (
+        <Dialog open onOpenChange={() => setShowCancel(false)}>
+          <CancelBillingDialog billing={billing} onClose={() => setShowCancel(false)} />
         </Dialog>
       )}
     </div>
