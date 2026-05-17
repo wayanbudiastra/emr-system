@@ -145,7 +145,7 @@ export function PasienForm({ mode = 'create', pasienId, defaultValues }: PasienF
             <FormField control={form.control} name="tempatLahir" render={({ field }) => (
               <FormItem>
                 <FormLabel>Tempat Lahir <span className="text-destructive">*</span></FormLabel>
-                <FormControl><Input placeholder="Kota / Kabupaten" {...field} /></FormControl>
+                <FormControl><Input placeholder="Kota / Kabupaten" {...field} value={field.value ?? ''} /></FormControl>
                 <FormMessage />
               </FormItem>
             )} />
