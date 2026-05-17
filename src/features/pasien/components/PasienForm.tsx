@@ -369,7 +369,7 @@ export function PasienForm({ mode = 'create', pasienId, defaultValues }: PasienF
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xs">Nama <span className="text-destructive">*</span></FormLabel>
-                        <FormControl><Input className="h-8 text-sm" placeholder="Nama lengkap" {...field} /></FormControl>
+                        <FormControl><Input className="h-8 text-sm" placeholder="Nama lengkap" {...field} value={field.value ?? ''} /></FormControl>
                         <FormMessage className="text-xs" />
                       </FormItem>
                     )} />
