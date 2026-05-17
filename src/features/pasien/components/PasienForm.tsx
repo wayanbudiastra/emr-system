@@ -398,7 +398,7 @@ export function PasienForm({ mode = 'create', pasienId, defaultValues }: PasienF
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xs">No. HP <span className="text-destructive">*</span></FormLabel>
-                        <FormControl><Input className="h-8 text-sm" type="tel" placeholder="08xxxxxxxxxx" {...field} /></FormControl>
+                        <FormControl><Input className="h-8 text-sm" type="tel" placeholder="08xxxxxxxxxx" {...field} value={field.value ?? ''} /></FormControl>
                         <FormMessage className="text-xs" />
                       </FormItem>
                     )} />
