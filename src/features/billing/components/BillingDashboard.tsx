@@ -8,7 +8,9 @@ import {
   Search, Lock, Unlock, CreditCard, Banknote, ShieldCheck,
   Plus, Trash2, RefreshCw, Receipt, AlertTriangle, CheckCircle2,
   User, Building2, X, Percent, ChevronDown, ChevronUp,
+  Printer, Ban,
 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { Input }    from '@/components/ui/input';
 import { Button }   from '@/components/ui/button';
 import { Badge }    from '@/components/ui/badge';
